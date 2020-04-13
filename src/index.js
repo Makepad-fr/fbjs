@@ -14,7 +14,7 @@ const arguments = minimist(
     process.argv.slice(2),
     {
         string: [ 'group-ids', 'output' ],
-        boolean: [ 'version', 'help', 'debug'],
+        boolean: [ 'version', 'help', 'debug' , 'headful'],
         _: ['init'],
         default: { 'output': './'},
         alias: { h: 'help', v: 'version' },
