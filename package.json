@@ -1,0 +1,69 @@
+{
+  "_from": "facebook-group-posts-scraper",
+  "_id": "facebook-group-posts-scraper@1.0.0",
+  "_inBundle": false,
+  "_integrity": "sha512-kOsqu1ZeJPKX4KsmzM/HFJqR2DdZ7LuSebjLhiprKeH0aGkHP0gkGr8Eh7GGZ9tAC74weDBekZ/g1KZ6xDIsDg==",
+  "_location": "/facebook-group-posts-scraper",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "facebook-group-posts-scraper",
+    "name": "facebook-group-posts-scraper",
+    "escapedName": "facebook-group-posts-scraper",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/facebook-group-posts-scraper/-/facebook-group-posts-scraper-1.0.0.tgz",
+  "_shasum": "26c44940bce523ee9a9bee8c97006484f465a494",
+  "_spec": "facebook-group-posts-scraper",
+  "_where": "/home/pi/facebook-group-posts-scraper",
+  "author": {
+    "name": "İdil Sağlam",
+    "email": "idil.saglam@makepad.fr",
+    "url": "https://idilsaglam.com"
+  },
+  "bin": {
+    "fgps": "src/index.js"
+  },
+  "bundleDependencies": false,
+  "contributors": [
+    {
+      "name": "Kaan Yağcı",
+      "email": "kaan.yagci@makepad.fr",
+      "url": "https://kaanyagci.com"
+    }
+  ],
+  "dependencies": {
+    "chalk": "^4.0.0",
+    "configstore": "^5.0.1",
+    "inquirer": "^7.1.0",
+    "minimist": "^1.2.5",
+    "puppeteer": "^2.0.0"
+  },
+  "deprecated": false,
+  "description": "Facebook group posts scraper",
+  "keywords": [
+    "puppeteer",
+    "NodeJS",
+    "chalk",
+    "minimist",
+    "inquirer",
+    "configstore",
+    "bot",
+    "Facebook"
+  ],
+  "license": "GPL-3.0-or-later",
+  "main": "./src/index.js",
+  "name": "facebook-group-posts-scraper",
+  "scripts": {
+    "start": "node ./src/index.js",
+    "test": "jasmine"
+  },
+  "version": "1.0.0"
+}
