@@ -1,3 +1,5 @@
 node_modules
 *.json
+!package.json
+!package-lock.json
 static
