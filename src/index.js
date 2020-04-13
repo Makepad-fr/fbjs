@@ -117,7 +117,7 @@ function generateFacebookGroupUrlFromId(groupId) {
     return "https://m.facebook.com/groups/" + groupId + "/";
 }
 
-async function facebookLogIn() {
+async function facebookLogIn(arguments) {
 
     const browser = await puppeteer.launch(
         {
@@ -293,13 +293,13 @@ async function facebookMain(groupUrl,page,id) {
 // await browser.close();
 }
 
-async function main() {
+async function main(arguments) {
     if (isUserConfigured() === false) {
         await userConfig();
     }
 
     const facebookGroupIdList = arguments['group-ids'].split(',')
-    const page = await facebookLogIn();
+    const page = await facebookLogIn(arguments);
     // for (var i = 0; i < facebookGroupIdList.length; i++) {
     for (var i = 0; i < 1; i++) {
         const id = facebookGroupIdList[i];
@@ -335,7 +335,7 @@ if (arguments['_'].indexOf('init') !== -1) {
 }
 
 if (arguments['group-ids'] !== undefined && arguments['group-ids'] !== null) {
-    main().then(() => {
+    main(arguments).then(() => {
         console.log("Facebook group scraping done");
     });
 } else {
