@@ -301,7 +301,7 @@ async function main(arguments) {
     const facebookGroupIdList = arguments['group-ids'].split(',')
     const page = await facebookLogIn(arguments);
     // for (var i = 0; i < facebookGroupIdList.length; i++) {
-    for (var i = 0; i < 1; i++) {
+    for (var i = 0; i < facebookGroupIdList.length; i++) {
         const id = facebookGroupIdList[i];
         const groupUrl = generateFacebookGroupUrlFromId(id);
         await facebookMain(arguments, groupUrl,page,id);
