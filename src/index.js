@@ -156,6 +156,7 @@ async function facebookLogIn(arguments) {
     await page.click(selectors.login_form.submit);
     await page.waitForXPath('//*[@id="stories_tray"]/div/div[1]/div');
     await page.setRequestInterception(true);
+    const block_resources = ["image", "media", "font", "textrack", "object", "beacon", "csp_report", "imageset"];
     page.on('request', request => {
         const rt = request.resourceType();
         if (
@@ -177,7 +178,6 @@ async function facebookLogIn(arguments) {
 * @return {void} returns nothing but scrape all questions from specific facebook groups
 **/
 async function facebookMain(arguments, groupUrl, page,id) {
-  const block_resources = ["image", "media", "font", "textrack", "object", "beacon", "csp_report", "imageset"];
     // Navigates to the first facebook group Türk Ögrenciler - Paris
     await page.goto(
        groupUrl,
