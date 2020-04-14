@@ -221,8 +221,12 @@ async function facebookMain(arguments, groupUrl, page,id) {
             console.log(`Total posts before scraping ${allPublicationsList.length}`);
         }
         var isAnyNewPosts = false;
-        const groupPostsHtmlElements = await page.$x('//article/div[@class="story_body_container"]/div/span[1]');
-        const groupPostsAuthorHtmlElemments = await page.$x('((//article/div[@class="story_body_container"])[child::div/span])/header//strong[1]');
+        const groupPostsElementsXPathSelector = '//article/div[@class="story_body_container"]/div/span[1]';
+        await page.waitForSelector(groupPostsElementsXPathSelector);
+        const groupPostsHtmlElements = await page.$x(groupPostsElementsXPathSelector);
+        const groupPostsAuthorXPathSelector = '((//article/div[@class="story_body_container"])[child::div/span])/header//strong[1]';
+        await page.waitForSelector(groupPostsAuthorXPathSelector);
+        const groupPostsAuthorHtmlElemments = await page.$x(groupPostsAuthorXPathSelector);
         if (arguments['debug'] === true) {
             console.log('Group post author html elements number: ' + groupPostsAuthorHtmlElemments.length);
             console.log('Group posts html elements number: ' + groupPostsHtmlElements.length);
