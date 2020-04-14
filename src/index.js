@@ -165,7 +165,7 @@ async function facebookLogIn(arguments) {
 * @param {String} groupUrl The url of the Facebook group
 * @return {void} returns nothing but scrape all questions from specific facebook groups
 **/
-async function facebookMain(groupUrl,page,id) {
+async function facebookMain(arguments, groupUrl, page,id) {
   const block_resources = ["image", "media", "font", "textrack", "object", "beacon", "csp_report", "imageset"];
   page.on('request', request => {
     const rt = request.resourceType();
@@ -304,7 +304,7 @@ async function main(arguments) {
     for (var i = 0; i < 1; i++) {
         const id = facebookGroupIdList[i];
         const groupUrl = generateFacebookGroupUrlFromId(id);
-        await facebookMain(groupUrl,page,id);
+        await facebookMain(arguments, groupUrl,page,id);
     }
 }
 
