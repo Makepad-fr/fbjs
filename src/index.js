@@ -156,6 +156,17 @@ async function facebookLogIn(arguments) {
     await page.click(selectors.login_form.submit);
     await page.waitForXPath('//*[@id="stories_tray"]/div/div[1]/div');
     await page.setRequestInterception(true);
+    page.on('request', request => {
+        const rt = request.resourceType();
+        if (
+            block_resources.indexOf(rt) > 0 ||
+            request.url().match(/\.((jpe?g)|png|gif)/) != null
+        ) {
+            request.abort();
+        } else {
+            request.continue();
+        }
+    });
     return page;
 }
 
@@ -167,19 +178,6 @@ async function facebookLogIn(arguments) {
 **/
 async function facebookMain(arguments, groupUrl, page,id) {
   const block_resources = ["image", "media", "font", "textrack", "object", "beacon", "csp_report", "imageset"];
-  page.on('request', request => {
-    const rt = request.resourceType();
-    if (
-        block_resources.indexOf(rt) > 0 ||
-        request.url().match(/\.((jpe?g)|png|gif)/) != null
-    ) {
-        request.abort();
-    } else {
-        request.continue();
-    }
-  });
-
-
     // Navigates to the first facebook group Türk Ögrenciler - Paris
     await page.goto(
        groupUrl,
