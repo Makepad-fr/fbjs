@@ -53,13 +53,13 @@ function help() {
         console.info('  ' + magenta(command) + ':  ' + description);
     }
     
-    console.info('Availible options:');
+    console.info('Available options:');
     helpPageLine('--group-ids', '  Indicates which groups ids that we want to scrape (seperated by commas)');
     helpPageLine('-h, --help', '   Shows the help page');
     helpPageLine('-v, --version', 'Shows the CLI version');
     helpPageLine('--output', '     Specify the output folder destination');
     helpPageLine('--headful', '    Disable headless mode')
-    console.info('Availible commands:');
+    console.info('Available commands:');
     helpPageLine('init', '         Initialize user configuration');
 }
 
@@ -118,19 +118,24 @@ function generateFacebookGroupUrlFromId(groupId) {
 }
 
 async function facebookLogIn(arguments) {
+    
+    var browserOptions = {
+      headless: arguments["headful"] === false,
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sendbox",
+        "--disable-dev-shm-usage",
+        "--disable-accelerated-2d-canvas",
+        "--disable-gpu",
+      ],
+    };
 
-    const browser = await puppeteer.launch(
-        {
-            headless: (arguments['headful'] === false),
-            args: [
-              "--no-sandbox",
-              "--disable-setuid-sendbox",
-              "--disable-dev-shm-usage",
-              "--disable-accelerated-2d-canvas",
-              "--disable-gpu"
-              ]
-        }
-    );
+    if (process.arch === 'arm' || process.arch === 'arm64') {
+        // If processor architecture is arm or arm64 we need to use chromium browser
+        browserOptions.executablePath = 'chromium-browser';
+    }
+
+    const browser = await puppeteer.launch(browserOptions);
 
     // We need an incognito browser to avoid notification and location permissions of Facebook
     const incognitoContext = await browser.createIncognitoBrowserContext();
@@ -188,7 +193,7 @@ async function facebookMain(arguments, groupUrl, page,id) {
     await page.waitForXPath('//*[@id="m_group_stories_container"]');
     // Getting all Facebook group posts
 
-    const groupNameHtmlElement = (await page.$x('//*[@id="MRoot"]/div/div[2]/a/div/div[2]/div[1]/div/h1/div[1]'))[0];
+    const groupNameHtmlElement = (await page.$x('/html/head/title'))[0];
     var groupName = await page.evaluate(
       (el)=> { return el.textContent },
       groupNameHtmlElement
