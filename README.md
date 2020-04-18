@@ -1,7 +1,5 @@
 # Facebook Group Posts Scraper 
-​
-The Goal of Facebook Group Posts Scraper
-​
+​​
 Facebook Group Posts Scraper is a package which is used for scraping facebook group posts by their group ids.
 ​
 ## Getting Started - Installation
