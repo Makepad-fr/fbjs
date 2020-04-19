@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.2.0] - 2020-04-20
+
+### Fixed
+
+- Directory not found issue fixed for group names which contains `/` character by replacing `_` character.
+
 ## [2.1.0] - 2020-04-20
 
 ### Fixed
@@ -34,9 +40,3 @@
 - First version of instructions added in README.md file.
 
 
-
-
-
-
-
- 
