@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.1.0] - 2020-04-20
+
+### Fixed
+
+- Directory not found issue fixed for group names which contains `/` character.
+- Unwanted `\` characters removed at EOL in readme.
+
+
 ## [2.0.0] - 2020-04-19
 
 ### Added
