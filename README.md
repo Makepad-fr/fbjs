@@ -8,9 +8,9 @@ Facebook Group Posts Scraper is a package which is used for scraping facebook gr
 ​
 ## Usage
  
-- `fgps -h/--help`     - Shows the help page.\
-- `fgps -v/--version`  - Shows the CLI version.\
-- `fgps  --output`     - Specify the output folder destination.\
-- `fgps  --headful`    - Disable headless mode.\
-- `fgps  init`         - Initialize user configuration.\
+- `fgps -h/--help`     - Shows the help page.
+- `fgps -v/--version`  - Shows the CLI version.
+- `fgps  --output`     - Specify the output folder destination.
+- `fgps  --headful`    - Disable headless mode.
+- `fgps  init`         - Initialize user configuration.
 - `fgps  --group-ids`  - Indicates which groups ids that we want to scrape (seperated by commas).
