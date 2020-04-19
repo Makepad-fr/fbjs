@@ -5,7 +5,7 @@ const selectors = require('./selectors/facebook');
 const fs = require('fs');
 const inquirer = require('inquirer');
 const minimist = require('minimist');
-const chalk = require('chalk');
+const chalk = require('chalk');   
 const configstore = require('configstore');
 const package = require('../package.json');
 
@@ -200,10 +200,12 @@ async function facebookMain(arguments, groupUrl, page,id) {
     );
     if (arguments['debug'] === true) {
         console.log('Group title ' + groupName);
-    }
+    } 
+   
 
-    const fileName = arguments['output'] + groupName + '.json';
-
+    groupName = groupName.replace(/\//g, '\/');
+    var fileName = arguments['output'] + groupName + '.json';
+    
     var allPublicationsList;
 
 
@@ -264,6 +266,7 @@ async function facebookMain(arguments, groupUrl, page,id) {
                     isPublicationExists = true;
                     break;
                 }
+                
                 else {
                     // if publication does not exists in allPublictationList
                     isPublicationExists = false;
