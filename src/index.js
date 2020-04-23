@@ -202,8 +202,7 @@ async function facebookMain(arguments, groupUrl, page,id) {
         console.log('Group title ' + groupName);
     } 
    
-
-    groupName = groupName.replace(/\//g, '\/');
+    groupName = groupName.replace(/\//g, '_');
     var fileName = arguments['output'] + groupName + '.json';
     
     var allPublicationsList;
