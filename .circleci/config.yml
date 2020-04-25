@@ -1,0 +1,61 @@
+version: 2.1
+orbs:
+  node: circleci/node@1.1.6
+commands:
+  install-dependencies:
+    description: "Install dependencies"
+    steps:
+      - run: npm install
+  run-unit-tests:
+    description: "Run unit tests"
+    steps:
+      - run: npm test
+  lint-code:
+    description: "Lint the source code"
+    steps:
+      - run: npm run lint
+  create-npm-rc:
+    description: "Create .npmrc file"
+    steps:
+      - run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
+  publish-on-npm:
+    description: "Publish on npm.org"
+    steps:
+      - run: npm publish
+
+jobs:
+  build-lint-and-test:
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - install-dependencies
+      - lint-code
+      - run-unit-tests
+  build-and-publish:
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - install-dependencies
+      - create-npm-rc
+      - publish-on-npm
+
+workflows:
+  build-and-test:
+    jobs:
+      - build-lint-and-test
+  build-and-publish:
+    jobs:
+      - build-lint-and-test
+      - build-and-publish:
+          requires:
+            - build-lint-and-test 
+          filters:
+            tags:
+              only:
+                # matches stable version tags
+                # matches release candidate (aka rc) tags
+                # v1.10.10
+                # v1.0.0-rc1
+                - /^v([0-9]+\.){2}[0-9](-rc[0-9]+)?$/
