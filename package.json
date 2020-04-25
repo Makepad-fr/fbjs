@@ -19,7 +19,6 @@
     "chalk": "^4.0.0",
     "configstore": "^5.0.1",
     "inquirer": "^7.1.0",
-    "minimist": "^1.2.5",
     "puppeteer": "^2.0.0"
   },
   "description": "Facebook group posts scraper",
@@ -38,7 +37,21 @@
   "name": "facebook-group-posts-scraper",
   "scripts": {
     "start": "node ./src/index.js",
-    "test": "jasmine"
+    "test": "node_modules/.bin/jasmine",
+    "lint": "node_modules/.bin/eslint src"
   },
-  "version": "2.2.0"
+  "version": "2.2.0",
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-google": "^0.14.0",
+    "jasmine": "^3.5.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Clique-Paris/facebook-group-posts-scraper.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Clique-Paris/facebook-group-posts-scraper/issues",
+    "email": "idil.saglam@makepad.fr"
+  }
 }
