@@ -4,3 +4,4 @@ node_modules
 !package-lock.json
 static
 !.eslintrc.json
+!spec/support/jasmine.json

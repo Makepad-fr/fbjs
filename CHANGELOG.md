@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.3.0] - 2020-05-03
+
+### Changed
+- Code globally refactored
+
+### Fixed
+- `init` option issue fixed
+
 ## [2.2.0] - 2020-04-20
 
 ### Fixed
