@@ -52,7 +52,7 @@ workflows:
           requires:
             - build-lint-and-test 
           filters:
-            branchses:
+            branches:
               ignore: /.*/
             tags:
               only:
