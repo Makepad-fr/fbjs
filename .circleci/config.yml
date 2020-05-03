@@ -52,6 +52,8 @@ workflows:
           requires:
             - build-lint-and-test 
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only:
                 # matches stable version tags
