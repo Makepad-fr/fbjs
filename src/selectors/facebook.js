@@ -8,6 +8,7 @@ module.exports = {
   'facebook_group': {
     'm_group_stories_container': '#m_group_stories_container',
     'm_group_post_div': '#m_group_stories_container .storyStream article',
+    // eslint-disable-next-line max-len
     'm_group_story_container': '#m_group_stories_container .storyStream article .story_body_container',
   },
 };

@@ -8,8 +8,10 @@ const minimist = require('minimist');
 const chalk = require('chalk');
 const Configstore = require('configstore');
 const package = require('../package.json');
-
-const config = new Configstore(package.name, {});
+const config = new Configstore(
+    package.name,
+    {},
+);
 const arguments = minimist(
     process.argv.slice(2),
     {
@@ -199,7 +201,6 @@ sleeping the current process
 **/
 async function autoScroll(page, sleep) {
   await page.evaluate(async () => {
-
     /**
     * Function sleeps the current process for given number of milliseconds
     * @namespace sleep
@@ -207,7 +208,7 @@ async function autoScroll(page, sleep) {
     * @return {void} returns nothing but sleeps for time ms
     **/
     async function sleep(time) {
-      return new Promise(function (resolve) {
+      return new Promise(function(resolve) {
         setTimeout(resolve, time);
       });
     }
@@ -664,6 +665,3 @@ if (arguments['_'].indexOf('init') !== -1) {
     process.exit(1);
   }
 }
-
-
-
