@@ -233,7 +233,7 @@ async function autoScroll(page, sleep) {
 * related to the given Facebook group id
 **/
 function generateFacebookGroupUrlFromId(groupId) {
-  return 'https://m.facebook.com/groups/' + groupId + '/';
+  return 'https://www.facebook.com/groups/' + groupId + '/';
 }
 
 /**
@@ -426,7 +426,7 @@ async function facebookMain(
    * Waiting for the group stories container to continue
    * and to avoid the selector not found error
   **/
-  await page.waitForXPath('//*[@id="m_group_stories_container"]');
+  await page.waitForXPath('//div[@id="content_container"]');
   // Getting all Facebook group posts
 
   const groupNameHtmlElement = (await page.$x('/html/head/title'))[0];
@@ -453,20 +453,30 @@ async function facebookMain(
     }
     // eslint-disable-next-line no-var
     var isAnyNewPosts = false;
+    groupPostsXPath = '//div[@role="article"]';
+    groupPostsBodyRelXPath = './/div[@data-testid="post_message"]';
+    groupPostsAuthorRelXPath = '..//h5//span[contains(@class, "fwb")]/a';
+    groupPostsTimestampRelXPath = '..//h5/following-sibling::*[1]//abbr';
     await page.waitForXPath(
-        '//article/div[@class="story_body_container"]',
+        groupPostsXPath
     );
-    const groupPostsHtmlElements = await page.$x(
-        '//article/div[@class="story_body_container"]/div/span[1]',
-    );
-    const groupPostsAuthorHtmlElemments = await page.$x(
-        '((//article/div[@class="story_body_container"])' +
-        '[child::div/span])/header//strong[1]',
-    );
+    const groupPostsHtmlElements = await page.$x([
+        groupPostsXPath, groupPostsBodyRelXPath
+    ].join('/'));
+    const groupPostsAuthorHtmlElements = await page.$x([
+        groupPostsXPath, groupPostsBodyRelXPath, groupPostsAuthorRelXPath
+    ].join('/'));
+    const groupPostsTimestampHtmlElements = await page.$x([
+        groupPostsXPath, groupPostsBodyRelXPath, groupPostsTimestampRelXPath
+    ].join('/'));
     if (arguments['debug'] === true) {
       console.log(
           'Group post author html elements number: ' +
-           groupPostsAuthorHtmlElemments.length,
+           groupPostsAuthorHtmlElements.length,
+      );
+      console.log(
+          'Group post timestamp html elements number: ' +
+          groupPostsTimestampHtmlElements.length,
       );
       console.log(
           'Group posts html elements number: ' +
@@ -477,17 +487,24 @@ async function facebookMain(
     // Looping on each group post html elemen to get text and author
     for (let i = 0; i < groupPostsHtmlElements.length; i++) {
       const postAuthorList = await page.evaluate(
-          (el, ab) => {
-            return [el.textContent, ab.textContent];
+          (el, a, t) => {
+            return [el.textContent, a.textContent, t.title, t.dataset.utime];
           },
           groupPostsHtmlElements[i],
-          groupPostsAuthorHtmlElemments[i],
+          groupPostsAuthorHtmlElements[i],
+          groupPostsTimestampHtmlElements[i],
       );
+
+      if (arguments['debug'] === true) {
+          console.log("Processed post on " + postAuthorList[2]);
+      }
 
       // crates a publication object which contains our publication
       const publication = {
         post: postAuthorList[0],
         author: postAuthorList[1],
+        datetime: postAuthorList[2],
+        utime: postAuthorList[3],
       };
 
       // variable indicates if publication exists in allPublicationsList
@@ -524,7 +541,7 @@ async function facebookMain(
      * global publictions list (allPublictionList)
      **/
     if (arguments['debug'] === true) {
-      console.log('Total posts before scrolling' + allPublicationsList.length);
+      console.log('Total posts before scrolling ' + allPublicationsList.length);
     }
     /**
      *  console.log(`Total posts before
@@ -543,7 +560,9 @@ async function facebookMain(
   );
   fs.writeFileSync(
       fileName,
-      JSON.stringify(allPublicationsList, undefined, 4),
+      JSON.stringify(
+          allPublicationsList.sort((a, b) => b.utime - a.utime), undefined, 4
+      ),
       {encoding: 'utf8'},
   );
 // await browser.close();
