@@ -328,6 +328,12 @@ async function setPageListeners(page) {
 async function facebookLogIn(arguments, page, setPageListeners) {
   // Goes to base facebook url
   await page.goto('https://facebook.com');
+  await page.waitForXPath('//button[@data\-cookiebanner="accept_button"]');
+  var acceptCookiesButton = (await page.$x('//button[@data\-cookiebanner="accept_button"]'))[0];
+  await page.evaluate(el => {
+    el.focus();
+    el.click();
+  }, acceptCookiesButton)
   /**
    * Waiting for login form JQuery selector to avoid
    * that forms elements to be not found
