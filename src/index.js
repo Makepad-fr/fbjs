@@ -342,17 +342,19 @@ async function facebookLogIn(arguments, page, setPageListeners) {
   // Focusing to the email input
   await page.focus(selectors.login_form.email);
   // Clicking on the email form input to be able to type on input
-  await page.click(selectors.login_form.email);
+  await page.focus(selectors.login_form.email);
   // Typing on the email input the email address
   await page.keyboard.type(config.get('username'));
   // Focusing on the password input
   await page.focus(selectors.login_form.password);
-  // Clicking on the password input to be able to type on it
-  await page.click(selectors.login_form.password);
   // Typing the facebook password on password input
   await page.keyboard.type(config.get('password'));
   // Clicking on the submit button
-  await page.click(selectors.login_form.submit);
+  await page.waitForXPath("//button[contains(., 'Log In')]")
+  const [loginButton] = await page.$x("//button[contains(., 'Log In')]");
+  await page.evaluate((el) => {
+    el.click();
+  }, loginButton);
   await page.waitForXPath('//*[@id="stories_tray"]/div/div[1]/div');
   await setPageListeners(page);
   return page;
