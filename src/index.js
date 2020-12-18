@@ -355,7 +355,7 @@ async function facebookLogIn(arguments, page, setPageListeners) {
   await page.evaluate((el) => {
     el.click();
   }, loginButton);
-  await page.waitForXPath('//*[@id="stories_tray"]/div/div[1]/div');
+  await page.waitForXPath('//div[@data\-pagelet="Stories"]');
   await setPageListeners(page);
   return page;
 }
@@ -434,7 +434,6 @@ async function facebookMain(
    * Waiting for the group stories container to continue
    * and to avoid the selector not found error
   **/
-  await page.waitForXPath('//*[@id="m_group_stories_container"]');
   // Getting all Facebook group posts
 
   const groupNameHtmlElement = (await page.$x('/html/head/title'))[0];
@@ -447,7 +446,7 @@ async function facebookMain(
   if (arguments['debug'] === true) {
     console.log('Group title ' + groupName);
   }
-
+  
   groupName = groupName.replace(/\//g, '_');
   const fileName = arguments['output'] + groupName + '.json';
 
@@ -465,37 +464,31 @@ async function facebookMain(
         '//article/div[@class="story_body_container"]',
     );
     const groupPostsHtmlElements = await page.$x(
-        '//article/div[@class="story_body_container"]/div/span[1]',
+        '//article/div[@class="story_body_container"]/div[1]',
     );
     const groupPostsAuthorHtmlElemments = await page.$x(
         '((//article/div[@class="story_body_container"])' +
-        '[child::div/span])/header//strong[1]',
+        '[child::div])/header//strong[1]',
     );
-    if (arguments['debug'] === true) {
-      console.log(
-          'Group post author html elements number: ' +
-           groupPostsAuthorHtmlElemments.length,
-      );
-      console.log(
-          'Group posts html elements number: ' +
-          groupPostsHtmlElements.length,
-      );
-    }
+     
 
     // Looping on each group post html elemen to get text and author
-    for (let i = 0; i < groupPostsHtmlElements.length; i++) {
-      const postAuthorList = await page.evaluate(
-          (el, ab) => {
-            return [el.textContent, ab.textContent];
+    for (let i = 0; i < groupPostsAuthorHtmlElemments.length; i++) {
+      console.log(`i=${i}`);
+      const [postAuthorName, postTextContent] = await page.evaluate(
+          (el,eb) => {
+            return [el.textContent, eb.textContent];
           },
-          groupPostsHtmlElements[i],
           groupPostsAuthorHtmlElemments[i],
+          groupPostsHtmlElements[i],
       );
+      const postContent = await groupPostsAuthorHtmlElemments[i].$x('//article/div[@class="story_body_container"]//span[1]/p');
+
 
       // crates a publication object which contains our publication
       const publication = {
-        post: postAuthorList[0],
-        author: postAuthorList[1],
+        post: postAuthorName,
+        author: postTextContent,
       };
 
       // variable indicates if publication exists in allPublicationsList
@@ -601,9 +594,9 @@ async function main(
   }
 
   const facebookGroupIdList = arguments['group-ids'].split(',');
-
   const browser = await createBrowser(arguments);
   let page = await incognitoMode(browser);
+  await page.setUserAgent("User agent Mozilla/5.0 (Macintosh; Intel Mac OS X 10_16_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.0 Safari/537.36");
   page = await facebookLogIn(arguments, page, setPageListeners);
   // for (var i = 0; i < facebookGroupIdList.length; i++) {
   for (let i = 0; i < facebookGroupIdList.length; i++) {
