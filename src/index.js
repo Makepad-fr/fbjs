@@ -350,8 +350,8 @@ async function facebookLogIn(arguments, page, setPageListeners) {
   // Typing the facebook password on password input
   await page.keyboard.type(config.get('password'));
   // Clicking on the submit button
-  await page.waitForXPath("//button[contains(., 'Log In')]")
-  const [loginButton] = await page.$x("//button[contains(., 'Log In')]");
+  await page.waitForXPath('//button[@data\-testid="royal_login_button"]')
+  const [loginButton] = await page.$x('//button[@data\-testid="royal_login_button"]');
   await page.evaluate((el) => {
     el.click();
   }, loginButton);
