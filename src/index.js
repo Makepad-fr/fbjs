@@ -474,7 +474,6 @@ async function facebookMain(
 
     // Looping on each group post html elemen to get text and author
     for (let i = 0; i < groupPostsAuthorHtmlElemments.length; i++) {
-      console.log(`i=${i}`);
       const [postAuthorName, postTextContent] = await page.evaluate(
           (el,eb) => {
             return [el.textContent, eb.textContent];
