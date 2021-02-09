@@ -6,4 +6,4 @@ node_modules
 static
 !.eslintrc.json
 !spec/support/jasmine.json
-out
+dist
