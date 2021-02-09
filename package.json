@@ -1,14 +1,19 @@
 {
   "author": {
-    "name": "İdil Sağlam",
-    "email": "idil.saglam@makepad.fr",
-    "url": "https://idilsaglam.com"
+    "name": "Makepad developers",
+    "email": "dev@makepad.fr",
+    "url": "https://makepad.fr"
   },
   "bin": {
-    "fgps": "src/index.js"
+    "fbjs": "dist/index.js"
   },
   "bundleDependencies": [],
   "contributors": [
+    {
+      "name": "İdil Sağlam",
+      "email": "idil.saglam@makepad.fr",
+      "url": "https://idilsaglam.com"
+    },
     {
       "name": "Kaan Yağcı",
       "email": "kaan.yagci@makepad.fr",
@@ -23,6 +28,9 @@
   },
   "description": "Facebook group posts scraper",
   "keywords": [
+    "TypeScript",
+    "Facebook bot",
+    "automation",
     "puppeteer",
     "NodeJS",
     "chalk",
@@ -34,25 +42,33 @@
   ],
   "license": "GPL-3.0-or-later",
   "main": "./src/index.js",
-  "name": "facebook-group-posts-scraper",
+  "name": "@makepad/fbjs",
   "scripts": {
-    "start": "node ./src/index.js",
+    "prestart": "node_modules/typescript/bin/tsc",
+    "start": "node ./dist/index.js",
     "test": "node_modules/.bin/jasmine",
-    "lint": "node_modules/.bin/eslint src",
+    "lint": "node_modules/.bin/eslint . --ext .ts,.tsx",
     "all-contributors": "node_modules/.bin/all-contributors"
   },
   "version": "2.3.2",
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.15.0",
+    "@typescript-eslint/parser": "^4.15.0",
     "eslint": "^6.8.0",
+    "eslint-config-airbnb-typescript": "^12.3.1",
     "eslint-config-google": "^0.14.0",
-    "jasmine": "^3.5.0"
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.22.0",
+    "jasmine": "^3.5.0",
+    "typescript": "^4.1.3"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Clique-Paris/facebook-group-posts-scraper.git"
+    "url": "https://github.com/Makepad-fr/fbjs.git"
   },
   "bugs": {
-    "url": "https://github.com/Clique-Paris/facebook-group-posts-scraper/issues",
-    "email": "idil.saglam@makepad.fr"
+    "url": "https://github.com/Makepad-fr/fbjs/issues",
+    "email": "dev@makepad.fr"
   }
 }
