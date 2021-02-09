@@ -21,17 +21,6 @@ For many groups at once:
 fgps --group-ids some_group1,some_group2,some_group3 --output /some/output/dir
 ```
 
-App will output hundreds of `i=xxx` lines on the screen and finally a data files will be placed in specified output dir.
-
-```
-i=1
-i=2
-...
-i=1082
-i=1083
-...
-```
-
 ## Command-line options
  
 - `fgps -h/--help`    - Shows the help page.
