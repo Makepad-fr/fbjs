@@ -1,0 +1,14 @@
+{
+  "projectName": "fbjs",
+  "projectOwner": "Makepad-fr",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 32,
+  "commit": true,
+  "commitConvention": "gitmoji",
+  "contributors": [],
+  "contributorsPerLine": 7
+}
