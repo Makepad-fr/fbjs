@@ -1,0 +1,56 @@
+{
+  "projectName": "fbjs",
+  "projectOwner": "Makepad-fr",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 32,
+  "commit": true,
+  "commitConvention": "gitmoji",
+  "contributors": [
+    {
+      "login": "kaanyagci",
+      "name": "Kaan Yagci",
+      "avatar_url": "https://avatars.githubusercontent.com/u/9104546?v=4",
+      "profile": "https://kaanyagci.com/",
+      "contributions": [
+        "code",
+        "question",
+        "infra",
+        "platform"
+      ]
+    },
+    {
+      "login": "idilsaglam",
+      "name": "Idil Saglam",
+      "avatar_url": "https://avatars.githubusercontent.com/u/39597780?v=4",
+      "profile": "https://github.com/idilsaglam",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "gakowalski",
+      "name": "Grzegorz Adam Kowalski",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1021798?v=4",
+      "profile": "https://grzegorzkowalski.pl/",
+      "contributions": [
+        "code",
+        "bug",
+        "doc"
+      ]
+    },
+    {
+      "login": "ameierchen",
+      "name": "ameierchen",
+      "avatar_url": "https://avatars.githubusercontent.com/u/78607149?v=4",
+      "profile": "https://github.com/ameierchen",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7
+}
