@@ -52,7 +52,7 @@
     "test": "node_modules/.bin/jasmine",
     "lint": "node node_modules/eslint/bin/eslint.js . --ext .ts,.tsx"
   },
-  "version": "2.3.0",
+  "version": "3.0.0",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.15.0",
     "@typescript-eslint/parser": "^4.15.0",
