@@ -41,6 +41,15 @@
         "bug",
         "doc"
       ]
+    },
+    {
+      "login": "ameierchen",
+      "name": "ameierchen",
+      "avatar_url": "https://avatars.githubusercontent.com/u/78607149?v=4",
+      "profile": "https://github.com/ameierchen",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7
