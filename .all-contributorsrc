@@ -9,6 +9,19 @@
   "imageSize": 32,
   "commit": true,
   "commitConvention": "gitmoji",
-  "contributors": [],
+  "contributors": [
+    {
+      "login": "kaanyagci",
+      "name": "Kaan Yagci",
+      "avatar_url": "https://avatars.githubusercontent.com/u/9104546?v=4",
+      "profile": "https://kaanyagci.com/",
+      "contributions": [
+        "code",
+        "question",
+        "infra",
+        "platform"
+      ]
+    }
+  ],
   "contributorsPerLine": 7
 }
