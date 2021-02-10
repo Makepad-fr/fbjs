@@ -48,10 +48,12 @@
   "main": "./src/index.js",
   "name": "@makepad/fbjs",
   "scripts": {
-    "prestart": "node_modules/typescript/bin/tsc",
+    "compile": "node_modules/typescript/bin/tsc",
+    "prestart": "npm run compile",
     "start": "node ./dist/index.js",
     "test": "node_modules/.bin/jasmine",
-    "lint": "node node_modules/eslint/bin/eslint.js . --ext .ts,.tsx"
+    "lint": "node node_modules/eslint/bin/eslint.js . --ext .ts,.tsx",
+    "preinstall": "npm run compile"
   },
   "version": "3.0.0",
   "devDependencies": {
