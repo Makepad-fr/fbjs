@@ -21,6 +21,15 @@
         "infra",
         "platform"
       ]
+    },
+    {
+      "login": "idilsaglam",
+      "name": "Idil Saglam",
+      "avatar_url": "https://avatars.githubusercontent.com/u/39597780?v=4",
+      "profile": "https://github.com/idilsaglam",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7
