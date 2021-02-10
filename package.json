@@ -38,7 +38,8 @@
   "scripts": {
     "start": "node ./src/index.js",
     "test": "node_modules/.bin/jasmine",
-    "lint": "node_modules/.bin/eslint src"
+    "lint": "node_modules/.bin/eslint src",
+    "all-contributors": "node_modules/.bin/all-contributors"
   },
   "version": "2.3.0",
   "devDependencies": {
