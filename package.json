@@ -27,7 +27,8 @@
     "chalk": "^4.0.0",
     "configstore": "^5.0.1",
     "inquirer": "^7.1.0",
-    "puppeteer": "^2.0.0"
+    "puppeteer": "^2.0.0",
+    "winston": "^3.3.3"
   },
   "description": "Facebook group posts scraper",
   "keywords": [
