@@ -3,7 +3,7 @@
 
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ​​
@@ -33,6 +33,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="https://kaanyagci.com/"><img src="https://avatars.githubusercontent.com/u/9104546?v=4?s=32" width="32px;" alt=""/><br /><sub><b>Kaan Yagci</b></sub></a><br /><a href="https://github.com/Makepad-fr/fbjs/commits?author=kaanyagci" title="Code">💻</a> <a href="#question-kaanyagci" title="Answering Questions">💬</a> <a href="#infra-kaanyagci" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#platform-kaanyagci" title="Packaging/porting to new platform">📦</a></td>
     <td align="center"><a href="https://github.com/idilsaglam"><img src="https://avatars.githubusercontent.com/u/39597780?v=4?s=32" width="32px;" alt=""/><br /><sub><b>Idil Saglam</b></sub></a><br /><a href="https://github.com/Makepad-fr/fbjs/commits?author=idilsaglam" title="Code">💻</a></td>
+    <td align="center"><a href="https://grzegorzkowalski.pl/"><img src="https://avatars.githubusercontent.com/u/1021798?v=4?s=32" width="32px;" alt=""/><br /><sub><b>Grzegorz Adam Kowalski</b></sub></a><br /><a href="https://github.com/Makepad-fr/fbjs/commits?author=gakowalski" title="Code">💻</a> <a href="https://github.com/Makepad-fr/fbjs/issues?q=author%3Agakowalski" title="Bug reports">🐛</a> <a href="https://github.com/Makepad-fr/fbjs/commits?author=gakowalski" title="Documentation">📖</a></td>
   </tr>
 </table>
 

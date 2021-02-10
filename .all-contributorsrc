@@ -30,6 +30,17 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "gakowalski",
+      "name": "Grzegorz Adam Kowalski",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1021798?v=4",
+      "profile": "https://grzegorzkowalski.pl/",
+      "contributions": [
+        "code",
+        "bug",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7
