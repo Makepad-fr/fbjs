@@ -1,13 +1,12 @@
 
 # Facebook Group Posts Scraper
 
-
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
+[![Gitter](https://badges.gitter.im/Makepad-fr/fbjs.svg)](https://gitter.im/Makepad-fr/fbjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 <a href="https://gitmoji.dev">
   <img src="https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg?style=flat-square" alt="Gitmoji">
-</a>
-[![Gitter](https://badges.gitter.im/Makepad-fr/fbjs.svg)](https://gitter.im/Makepad-fr/fbjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+</a><!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
+====
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ​​
