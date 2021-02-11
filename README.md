@@ -1,5 +1,5 @@
 
-# Facebook Group Posts Scraper
+# Facebook JavaScript automation
 
 [![Gitter](https://badges.gitter.im/Makepad-fr/fbjs.svg)](https://gitter.im/Makepad-fr/fbjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 <a href="https://gitmoji.dev">
@@ -16,30 +16,30 @@ Facebook Group Posts Scraper is a package which is used for scraping facebook gr
 ## Getting Started - Installation
 
 ```sh
-npm i facebook-group-posts-scraper -g --unsafe-perm
-fgps init
+npm i @makepad/fbjs -g --unsafe-perm
+fbjs init
 ```
 ## Usage
 
 To scrape posts from group accessible by URL facebook.com/groups/some_group/:
 
 ```sh
-fgps --group-ids some_group --output /some/output/dir
+fbjs --group-ids some_group --output /some/output/dir
 ```
 
 For many groups at once:
 ```sh
-fgps --group-ids some_group1,some_group2,some_group3 --output /some/output/dir
+fbjs --group-ids some_group1,some_group2,some_group3 --output /some/output/dir
 ```
 
 ## Command-line options
  
-- `fgps -h/--help`     - Shows the help page.
-- `fgps -v/--version`  - Shows the CLI version.
-- `fgps  --output`     - Specify the output folder destination.
-- `fgps  --headful`    - Disable headless mode.
-- `fgps  init`         - Initialize user configuration.
-- `fgps  --group-ids`  - Indicates which groups ids that we want to scrape (seperated by commas).
+- `fbjs -h/--help`     - Shows the help page.
+- `fbjs -v/--version`  - Shows the CLI version.
+- `fbjs  --output`     - Specify the output folder destination.
+- `fbjs  --headful`    - Disable headless mode.
+- `fbjs  init`         - Initialize user configuration.
+- `fbjs  --group-ids`  - Indicates which groups ids that we want to scrape (seperated by commas).
 
 ## Contributors ✨
 
