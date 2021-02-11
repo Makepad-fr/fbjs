@@ -1,7 +1,7 @@
 import Configstore from 'configstore';
 import { FacebookConfiguration } from '../lib/struct/facebookConfiguration';
 
-const p = require('../package.json');
+const p = require('../../package.json');
 
 export const { version } = p;
 
