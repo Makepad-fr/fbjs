@@ -329,11 +329,13 @@ async function facebookLogIn(arguments, page, setPageListeners) {
   // Goes to base facebook url
   await page.goto('https://facebook.com');
   await page.waitForXPath('//button[@data\-cookiebanner="accept_button"]');
-  var acceptCookiesButton = (await page.$x('//button[@data\-cookiebanner="accept_button"]'))[0];
-  await page.evaluate(el => {
+  const acceptCookiesButton = (
+    await page.$x('//button[@data\-cookiebanner="accept_button"]')
+  )[0];
+  await page.evaluate((el) => {
     el.focus();
     el.click();
-  }, acceptCookiesButton)
+  }, acceptCookiesButton);
   /**
    * Waiting for login form JQuery selector to avoid
    * that forms elements to be not found
@@ -350,8 +352,10 @@ async function facebookLogIn(arguments, page, setPageListeners) {
   // Typing the facebook password on password input
   await page.keyboard.type(config.get('password'));
   // Clicking on the submit button
-  await page.waitForXPath('//button[@data\-testid="royal_login_button"]')
-  const [loginButton] = await page.$x('//button[@data\-testid="royal_login_button"]');
+  await page.waitForXPath('//button[@data\-testid="royal_login_button"]');
+  const [loginButton] = await page.$x(
+      '//button[@data\-testid="royal_login_button"]',
+  );
   await page.evaluate((el) => {
     el.click();
   }, loginButton);
@@ -446,7 +450,7 @@ async function facebookMain(
   if (arguments['debug'] === true) {
     console.log('Group title ' + groupName);
   }
-  
+
   groupName = groupName.replace(/\//g, '_');
   const fileName = arguments['output'] + groupName + '.json';
 
@@ -470,18 +474,19 @@ async function facebookMain(
         '((//article/div[@class="story_body_container"])' +
         '[child::div])/header//strong[1]',
     );
-     
+
 
     // Looping on each group post html elemen to get text and author
     for (let i = 0; i < groupPostsAuthorHtmlElemments.length; i++) {
       const [postAuthorName, postTextContent] = await page.evaluate(
-          (el,eb) => {
+          (el, eb) => {
             return [el.textContent, eb.textContent];
           },
           groupPostsAuthorHtmlElemments[i],
           groupPostsHtmlElements[i],
       );
-      const postContent = await groupPostsAuthorHtmlElemments[i].$x('//article/div[@class="story_body_container"]//span[1]/p');
+      await groupPostsAuthorHtmlElemments[i]
+          .$x('//article/div[@class="story_body_container"]//span[1]/p');
 
 
       // crates a publication object which contains our publication
@@ -595,7 +600,11 @@ async function main(
   const facebookGroupIdList = arguments['group-ids'].split(',');
   const browser = await createBrowser(arguments);
   let page = await incognitoMode(browser);
-  await page.setUserAgent("User agent Mozilla/5.0 (Macintosh; Intel Mac OS X 10_16_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.0 Safari/537.36");
+  await page.setUserAgent(
+      'User agent Mozilla/5.0 (Macintosh;' +
+    ' Intel Mac OS X 10_16_0) AppleWebKit/537.36'+
+    ' (KHTML, like Gecko) Chrome/80.0.3987.0 Safari/537.36',
+  );
   page = await facebookLogIn(arguments, page, setPageListeners);
   // for (var i = 0; i < facebookGroupIdList.length; i++) {
   for (let i = 0; i < facebookGroupIdList.length; i++) {
