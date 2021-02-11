@@ -1,7 +1,6 @@
 import inquirer from 'inquirer';
-import minimist from 'minimist';
-import { version } from '../config';
-import { FacebookConfiguration } from '../struct/facebookConfiguration';
+import { version } from './config';
+import { FacebookConfiguration } from '../lib/struct/facebookConfiguration';
 
 /**
   * Function gets the user configuration information by asking
