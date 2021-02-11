@@ -1,13 +1,12 @@
 
 # Facebook Group Posts Scraper
 
-
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
+[![Gitter](https://badges.gitter.im/Makepad-fr/fbjs.svg)](https://gitter.im/Makepad-fr/fbjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 <a href="https://gitmoji.dev">
   <img src="https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg?style=flat-square" alt="Gitmoji">
-</a>
-[![Gitter](https://badges.gitter.im/Makepad-fr/fbjs.svg)](https://gitter.im/Makepad-fr/fbjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+</a><!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
+====
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ​​
@@ -51,10 +50,10 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="https://kaanyagci.com/"><img src="https://avatars.githubusercontent.com/u/9104546?v=4?s=32" width="32px;" alt=""/><br /><sub><b>Kaan Yagci</b></sub></a><br /><a href="https://github.com/Makepad-fr/fbjs/commits?author=kaanyagci" title="Code">💻</a> <a href="#question-kaanyagci" title="Answering Questions">💬</a> <a href="#infra-kaanyagci" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#platform-kaanyagci" title="Packaging/porting to new platform">📦</a></td>
-    <td align="center"><a href="https://github.com/idilsaglam"><img src="https://avatars.githubusercontent.com/u/39597780?v=4?s=32" width="32px;" alt=""/><br /><sub><b>Idil Saglam</b></sub></a><br /><a href="https://github.com/Makepad-fr/fbjs/commits?author=idilsaglam" title="Code">💻</a></td>
-    <td align="center"><a href="https://grzegorzkowalski.pl/"><img src="https://avatars.githubusercontent.com/u/1021798?v=4?s=32" width="32px;" alt=""/><br /><sub><b>Grzegorz Adam Kowalski</b></sub></a><br /><a href="https://github.com/Makepad-fr/fbjs/commits?author=gakowalski" title="Code">💻</a> <a href="https://github.com/Makepad-fr/fbjs/issues?q=author%3Agakowalski" title="Bug reports">🐛</a> <a href="https://github.com/Makepad-fr/fbjs/commits?author=gakowalski" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://github.com/ameierchen"><img src="https://avatars.githubusercontent.com/u/78607149?v=4?s=32" width="32px;" alt=""/><br /><sub><b>ameierchen</b></sub></a><br /><a href="https://github.com/Makepad-fr/fbjs/commits?author=ameierchen" title="Code">💻</a></td>
+    <td align="center"><a href="https://kaanyagci.com/"><img src="https://avatars.githubusercontent.com/u/9104546?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Kaan Yagci</b></sub></a><br /><a href="https://github.com/Makepad-fr/fbjs/commits?author=kaanyagci" title="Code">💻</a> <a href="#question-kaanyagci" title="Answering Questions">💬</a> <a href="#infra-kaanyagci" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#platform-kaanyagci" title="Packaging/porting to new platform">📦</a></td>
+    <td align="center"><a href="https://github.com/idilsaglam"><img src="https://avatars.githubusercontent.com/u/39597780?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Idil Saglam</b></sub></a><br /><a href="https://github.com/Makepad-fr/fbjs/commits?author=idilsaglam" title="Code">💻</a></td>
+    <td align="center"><a href="https://grzegorzkowalski.pl/"><img src="https://avatars.githubusercontent.com/u/1021798?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Grzegorz Adam Kowalski</b></sub></a><br /><a href="https://github.com/Makepad-fr/fbjs/commits?author=gakowalski" title="Code">💻</a> <a href="https://github.com/Makepad-fr/fbjs/issues?q=author%3Agakowalski" title="Bug reports">🐛</a> <a href="https://github.com/Makepad-fr/fbjs/commits?author=gakowalski" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/ameierchen"><img src="https://avatars.githubusercontent.com/u/78607149?v=4?s=100" width="100px;" alt=""/><br /><sub><b>ameierchen</b></sub></a><br /><a href="https://github.com/Makepad-fr/fbjs/commits?author=ameierchen" title="Code">💻</a></td>
   </tr>
 </table>
 

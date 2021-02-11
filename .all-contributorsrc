@@ -6,7 +6,7 @@
   "files": [
     "README.md"
   ],
-  "imageSize": 32,
+  "imageSize": 100,
   "commit": true,
   "commitConvention": "gitmoji",
   "contributors": [
