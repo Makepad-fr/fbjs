@@ -41,7 +41,7 @@
     "lint": "node_modules/.bin/eslint src",
     "all-contributors": "node_modules/.bin/all-contributors"
   },
-  "version": "2.3.1",
+  "version": "2.3.2",
   "devDependencies": {
     "eslint": "^6.8.0",
     "eslint-config-google": "^0.14.0",
