@@ -5,7 +5,7 @@
     "url": "https://makepad.fr"
   },
   "bin": {
-    "fbjs": "dist/index.js"
+    "fbjs": "dist/cli.js"
   },
   "bundleDependencies": [],
   "contributors": [
