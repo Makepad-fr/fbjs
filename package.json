@@ -27,6 +27,7 @@
     "chalk": "^4.0.0",
     "configstore": "^5.0.1",
     "inquirer": "^7.1.0",
+    "minimist": "^1.2.5",
     "puppeteer": "^2.0.0",
     "winston": "^3.3.3"
   },
