@@ -21,19 +21,17 @@
     "puppeteer": "^2.0.0",
     "winston": "^3.3.3"
   },
-  "description": "Facebook group posts scraper",
+  "description": "A NodeJS module for Facebook automation",
   "keywords": [
     "TypeScript",
-    "Facebook bot",
+    "Facebook bot library",
     "automation",
     "puppeteer",
     "NodeJS",
-    "chalk",
-    "minimist",
-    "inquirer",
-    "configstore",
-    "bot",
-    "Facebook"
+    "Facebook",
+    "automation",
+    "library",
+    "module"
   ],
   "license": "GPL-3.0-or-later",
   "main": "./src/index.js",
