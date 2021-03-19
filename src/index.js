@@ -328,6 +328,7 @@ async function setPageListeners(page) {
 async function facebookLogIn(arguments, page, setPageListeners) {
   // Goes to base facebook url
   await page.goto('https://facebook.com');
+  try {
   await page.waitForXPath('//button[@data\-cookiebanner="accept_button"]');
   const acceptCookiesButton = (
     await page.$x('//button[@data\-cookiebanner="accept_button"]')
@@ -336,6 +337,9 @@ async function facebookLogIn(arguments, page, setPageListeners) {
     el.focus();
     el.click();
   }, acceptCookiesButton);
+ } catch {
+    console.info('Cookie banner did not appear');
+ }
   /**
    * Waiting for login form JQuery selector to avoid
    * that forms elements to be not found
