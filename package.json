@@ -45,7 +45,7 @@
     "all-contributors": "node_modules/.bin/all-contributors",
     "preinstall": "npm run compile"
   },
-  "version": "3.0.0",
+  "version": "4.0.0",
   "devDependencies": {
     "@types/puppeteer": "^5.4.3",
     "@typescript-eslint/eslint-plugin": "^4.15.0",
