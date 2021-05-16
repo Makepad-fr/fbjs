@@ -426,7 +426,7 @@
         "signature": "4eaedf492de62832984d7efb89c4f67e2011d2dc6a9283ef9bb2049d96fc5f4f",
         "affectsGlobalScope": false
       },
-      "./src/lib/selectors.ts": {
+      "./src/lib/utils/selectors.ts": {
         "version": "52f751d043b22d595d0fb42d1732bc04acc62767072a6b2d15dc619646e06d07",
         "signature": "64ead48cf5d3a202de1072565257b26c3ce5664395844188f392740af846063b",
         "affectsGlobalScope": false
@@ -442,7 +442,7 @@
         "affectsGlobalScope": false
       },
       "./src/lib/fbjs.ts": {
-        "version": "fa4a9d5bd30b318cebeb793053e907a4bfd2d6a7963f6b7cb02477934643e7df",
+        "version": "74dc84ab12c428fa3280e4f55b112adb7990640ef18f5849053beb0788bb62e3",
         "signature": "fd85a12d109459f07788f0c6480997e5b074693ff5bbb7a1bb5ea6f39626e21d",
         "affectsGlobalScope": false
       },
@@ -711,7 +711,7 @@
         "./node_modules/puppeteer/lib/types.d.ts",
         "./src/lib/models/configuration.ts",
         "./src/lib/models/options.ts",
-        "./src/lib/selectors.ts"
+        "./src/lib/utils/selectors.ts"
       ]
     },
     "exportedModulesMap": {
@@ -1026,7 +1026,7 @@
       "./src/lib/fbjs.ts",
       "./src/lib/models/configuration.ts",
       "./src/lib/models/options.ts",
-      "./src/lib/selectors.ts"
+      "./src/lib/utils/selectors.ts"
     ]
   },
   "version": "4.2.4"
