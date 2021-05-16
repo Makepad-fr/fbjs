@@ -18,7 +18,7 @@
     }
   ],
   "dependencies": {
-    "puppeteer": "^2.0.0",
+    "puppeteer": "^9.1.1",
     "winston": "^3.3.3"
   },
   "description": "A NodeJS module for Facebook automation",
@@ -47,6 +47,7 @@
   },
   "version": "3.0.0",
   "devDependencies": {
+    "@types/puppeteer": "^5.4.3",
     "@typescript-eslint/eslint-plugin": "^4.15.0",
     "@typescript-eslint/parser": "^4.15.0",
     "eslint": "^6.8.0",
