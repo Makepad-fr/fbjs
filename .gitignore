@@ -8,3 +8,4 @@ static
 !.eslintrc.json
 !spec/support/jasmine.json
 dist
+.idea
