@@ -1,5 +1,5 @@
 /* eslint-disable no-await-in-loop */
-import * as puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer'
 import * as fs from 'fs';
 import selectors from './utils/selectors';
 import Options from './models/options';
@@ -145,8 +145,8 @@ async function facebookLogIn(
 ) {
   // Goes to base facebook url
   await page.goto('https://facebook.com');
-  await page.waitForXPath('//button[@data\\-cookiebanner="accept_button"]');
-  const acceptCookiesButton = (await page.$x('//button[@data\\-cookiebanner="accept_button"]'))[0];
+  await page.waitForXPath('//button[@data\-cookiebanner="accept_button"]');
+  const acceptCookiesButton = (await page.$x('//button[@data\-cookiebanner="accept_button"]'))[0];
   await page.evaluate((el) => {
     el.focus();
     el.click();
@@ -167,12 +167,12 @@ async function facebookLogIn(
   // Typing the facebook password on password input
   await page.keyboard.type(config.password);
   // Clicking on the submit button
-  await page.waitForXPath('//button[@data\\-testid="royal_login_button"]');
-  const [loginButton] = await page.$x('//button[@data\\-testid="royal_login_button"]');
+  await page.waitForXPath('//button[@data\-testid="royal_login_button"]');
+  const [loginButton] = await page.$x('//button[@data\-testid="royal_login_button"]');
   await page.evaluate((el) => {
     el.click();
   }, loginButton);
-  await page.waitForXPath('//div[@data\\-pagelet="Stories"]');
+  await page.waitForXPath('//div[@data\-pagelet="Stories"]');
   await setter(page);
   return page;
 }
