@@ -432,8 +432,8 @@
         "affectsGlobalScope": false
       },
       "./src/lib/models/options.ts": {
-        "version": "9f50dbee49404182f983ae152e202e4687d50fe382681bd9e22e83f2897704b5",
-        "signature": "4036bf63d47ed71ed479d377202141170e8d2c7e0b499a846672ea8a35b96837",
+        "version": "8bf50467c15d4ab4cedc6b98202a545db8433fddde9883cfde2e483458ee568f",
+        "signature": "7c10091108df3d8105beb1f8e3d05ac10a15bbe75b52742610b8747468c2ceec",
         "affectsGlobalScope": false
       },
       "./src/lib/models/configuration.ts": {
@@ -442,7 +442,7 @@
         "affectsGlobalScope": false
       },
       "./src/lib/fbjs.ts": {
-        "version": "74dc84ab12c428fa3280e4f55b112adb7990640ef18f5849053beb0788bb62e3",
+        "version": "703fdd77fac611dc974e94a74b83b8506805d00f48863c962d4d336686ac3a0f",
         "signature": "fd85a12d109459f07788f0c6480997e5b074693ff5bbb7a1bb5ea6f39626e21d",
         "affectsGlobalScope": false
       },
@@ -477,6 +477,7 @@
       "incremental": true,
       "target": 2,
       "module": 1,
+      "declaration": true,
       "outDir": "./dist",
       "rootDir": "./src",
       "composite": true,
