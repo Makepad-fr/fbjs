@@ -46,7 +46,7 @@
     "all-contributors": "node_modules/.bin/all-contributors"
   },
   "types": "dist/index.d.ts",
-  "version": "3.0.0-beta",
+  "version": "3.0.1-alpha-rc1",
   "devDependencies": {
     "@types/puppeteer": "^5.4.3",
     "@typescript-eslint/eslint-plugin": "^4.15.0",
