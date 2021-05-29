@@ -213,7 +213,7 @@ scrolling automatically
 * @return {void} returns nothing but scrape all questions from specific groups
 * */
 async function facebookMain(
-  args: { [x: string]: boolean; },
+  args: Options,
   groupUrl: any,
   page: puppeteer.Page,
   id: any,
