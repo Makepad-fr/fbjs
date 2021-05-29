@@ -432,8 +432,33 @@
         "affectsGlobalScope": false
       },
       "./src/lib/models/options.ts": {
-        "version": "8bf50467c15d4ab4cedc6b98202a545db8433fddde9883cfde2e483458ee568f",
-        "signature": "7c10091108df3d8105beb1f8e3d05ac10a15bbe75b52742610b8747468c2ceec",
+        "version": "2ab787dc2f554472113b4ac2d6ebe3d810e1ee800e470522ad85901f7ed9ec71",
+        "signature": "ec39caef051222e5217ad926502bb5c7b6ef85bbbbc92e22f34f6176506ebb7a",
+        "affectsGlobalScope": false
+      },
+      "./src/lib/errors/initialisationerror.ts": {
+        "version": "dcdb8e3171d5dc4a224edb0b56eba77a2ad1754fe41590b09cbb7233fa6fbbec",
+        "signature": "6cc7e22ad7e98478f3ee673c656600b1249c66624b8bf47a78f373a8dd0e970a",
+        "affectsGlobalScope": false
+      },
+      "./src/lib/models/grouppost.ts": {
+        "version": "a458e8d0062beb965a0ad80b2b3354e558f6d4221bc3a4dc07de79f97e7acfcc",
+        "signature": "44cb8ecce95b67b4964fe4427332261638fa98b718f278e020187721ee81293e",
+        "affectsGlobalScope": false
+      },
+      "./src/lib/utils/fbhelpers.ts": {
+        "version": "b6a3708e9e053fc4d89befed2ab541b4a185f8a435cc9064f8a14f7b44e2a131",
+        "signature": "d742cd512af838358f26d15bc25fa858d3714c83d36907e1f6ce98d74699579a",
+        "affectsGlobalScope": false
+      },
+      "./src/lib/errors/twofarequirederror.ts": {
+        "version": "afa38c77e4c5163f4bc1d2a7e9d2a381446675590ff6741ff0bac9cbe1451225",
+        "signature": "3771410aa4685b1ca9a8d8c26187e99a1d116662f5da769695aa59e318d21308",
+        "affectsGlobalScope": false
+      },
+      "./src/lib/models/fb.ts": {
+        "version": "68c974098c043dc94bd290905640f594d5a09d5c698c47528b6781ec986c9655",
+        "signature": "93690a0dc156fa658a19de63338ddbdebc1401d4bac43beb303cd2031300495e",
         "affectsGlobalScope": false
       },
       "./src/lib/models/configuration.ts": {
@@ -441,14 +466,14 @@
         "signature": "4b84743d0ef0f8513dc418fdd8f1e0848c318a0e74a23b634e8a2d771f909f22",
         "affectsGlobalScope": false
       },
-      "./src/lib/fbjs.ts": {
-        "version": "703fdd77fac611dc974e94a74b83b8506805d00f48863c962d4d336686ac3a0f",
-        "signature": "fd85a12d109459f07788f0c6480997e5b074693ff5bbb7a1bb5ea6f39626e21d",
+      "./src/index.ts": {
+        "version": "a9a6cdf007ea661863a361eb93dd6d0f281caeef56f769f97783f5f31b26961d",
+        "signature": "a9a6cdf007ea661863a361eb93dd6d0f281caeef56f769f97783f5f31b26961d",
         "affectsGlobalScope": false
       },
-      "./src/index.ts": {
-        "version": "e5e8904f65b6ab2fa2b9acae045afeb473ae0fa26fa9b2f9331c8343e695f051",
-        "signature": "e5e8904f65b6ab2fa2b9acae045afeb473ae0fa26fa9b2f9331c8343e695f051",
+      "./src/test.ts": {
+        "version": "bb9bb6b47970d343dbc35edf1c7e721e013f94ab60947e90694d6972bae7609a",
+        "signature": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881",
         "affectsGlobalScope": false
       },
       "./node_modules/@types/json-schema/index.d.ts": {
@@ -703,16 +728,28 @@
         "./node_modules/@types/node/index.d.ts"
       ],
       "./src/index.ts": [
-        "./src/lib/fbjs.ts",
+        "./src/lib/errors/initialisationerror.ts",
+        "./src/lib/errors/twofarequirederror.ts",
         "./src/lib/models/configuration.ts",
+        "./src/lib/models/fb.ts",
         "./src/lib/models/options.ts"
       ],
-      "./src/lib/fbjs.ts": [
+      "./src/lib/models/fb.ts": [
         "./node_modules/@types/node/fs.d.ts",
         "./node_modules/puppeteer/lib/types.d.ts",
-        "./src/lib/models/configuration.ts",
+        "./src/lib/errors/initialisationerror.ts",
+        "./src/lib/errors/twofarequirederror.ts",
+        "./src/lib/models/grouppost.ts",
         "./src/lib/models/options.ts",
+        "./src/lib/utils/fbhelpers.ts",
         "./src/lib/utils/selectors.ts"
+      ],
+      "./src/lib/utils/fbhelpers.ts": [
+        "./node_modules/@types/node/fs.d.ts",
+        "./src/lib/models/grouppost.ts"
+      ],
+      "./src/test.ts": [
+        "./src/index.ts"
       ]
     },
     "exportedModulesMap": {
@@ -924,13 +961,18 @@
         "./node_modules/@types/node/index.d.ts"
       ],
       "./src/index.ts": [
-        "./src/lib/fbjs.ts",
+        "./src/lib/errors/initialisationerror.ts",
+        "./src/lib/errors/twofarequirederror.ts",
         "./src/lib/models/configuration.ts",
+        "./src/lib/models/fb.ts",
         "./src/lib/models/options.ts"
       ],
-      "./src/lib/fbjs.ts": [
-        "./src/lib/models/configuration.ts",
+      "./src/lib/models/fb.ts": [
+        "./node_modules/puppeteer/lib/types.d.ts",
         "./src/lib/models/options.ts"
+      ],
+      "./src/lib/utils/fbhelpers.ts": [
+        "./src/lib/models/grouppost.ts"
       ]
     },
     "semanticDiagnosticsPerFile": [
@@ -1024,10 +1066,15 @@
       "./node_modules/typescript/lib/lib.scripthost.d.ts",
       "./node_modules/typescript/lib/lib.webworker.importscripts.d.ts",
       "./src/index.ts",
-      "./src/lib/fbjs.ts",
+      "./src/lib/errors/initialisationerror.ts",
+      "./src/lib/errors/twofarequirederror.ts",
       "./src/lib/models/configuration.ts",
+      "./src/lib/models/fb.ts",
+      "./src/lib/models/grouppost.ts",
       "./src/lib/models/options.ts",
-      "./src/lib/utils/selectors.ts"
+      "./src/lib/utils/fbhelpers.ts",
+      "./src/lib/utils/selectors.ts",
+      "./src/test.ts"
     ]
   },
   "version": "4.2.4"
