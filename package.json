@@ -34,18 +34,19 @@
     "module"
   ],
   "license": "GPL-3.0-or-later",
-  "main": "./src/index.js",
+  "main": "dist/index.js",
   "name": "@makepad/fbjs",
   "scripts": {
-    "compile": "node_modules/typescript/bin/tsc",
+    "prepublish": "npm run compile",
+    "compile": "node_modules/.bin/tsc",
     "prestart": "npm run compile",
     "start": "node ./dist/index.js",
     "test": "node_modules/.bin/jasmine",
     "lint": "node_modules/.bin/eslint . --ext .ts,.tsx",
-    "all-contributors": "node_modules/.bin/all-contributors",
-    "preinstall": "npm run compile"
+    "all-contributors": "node_modules/.bin/all-contributors"
   },
   "version": "3.0.0",
+  "types": "dist/index.d.ts",
   "devDependencies": {
     "@types/puppeteer": "^5.4.3",
     "@typescript-eslint/eslint-plugin": "^4.15.0",
