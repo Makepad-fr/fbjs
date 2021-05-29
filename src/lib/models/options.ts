@@ -1,6 +1,8 @@
 export default interface Options {
   debug: boolean;
   output: string;
-  headful: boolean;
-  groupIds: string[]
+  headless: boolean;
+  groupIds: string[];
+  useCookies: boolean;
+  disableAssets: boolean;
 }
