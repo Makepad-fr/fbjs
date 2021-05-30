@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.0.0] - 2021-05-16
+
+### Added
+
+- Support to use as a NodeJS module implemented
+
+### Changed
+
+- All source code migrated in TypeScript
+
+### Removed
+
+- CLI support removed
+
+
 ## [2.3.0] - 2020-05-03
 
 ### Changed

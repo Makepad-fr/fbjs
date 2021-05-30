@@ -1,7 +1,11 @@
+package-lock.json
 node_modules
 *.json
+!tsconfig.json
 !package.json
 !package-lock.json
 static
 !.eslintrc.json
 !spec/support/jasmine.json
+dist
+.idea
