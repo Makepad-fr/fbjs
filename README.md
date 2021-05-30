@@ -1,5 +1,8 @@
 
-# Facebook JavaScript automation
+# FBJS
+
+Tooling that automates your social media interactions to "farm" Likes, Comments, Group posts, and Friends on Facebook.\
+Implemented in TypeScript using Puppeteer.
 
 [![Gitter](https://badges.gitter.im/Makepad-fr/fbjs.svg)](https://gitter.im/Makepad-fr/fbjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 <a href="https://gitmoji.dev">
@@ -11,35 +14,11 @@
 
 ​​
 
-Facebook Group Posts Scraper is a package which is used for scraping facebook group posts by their group ids.
+## Find the full documentation on [fbjs.dev](https://fbjs.dev)
 
-## Getting Started - Installation
+## Showcase
 
-```sh
-npm i @makepad/fbjs -g --unsafe-perm
-fbjs init
-```
-## Usage
-
-To scrape posts from group accessible by URL facebook.com/groups/some_group/:
-
-```sh
-fbjs --group-ids some_group --output /some/output/dir
-```
-
-For many groups at once:
-```sh
-fbjs --group-ids some_group1,some_group2,some_group3 --output /some/output/dir
-```
-
-## Command-line options
- 
-- `fbjs -h/--help`     - Shows the help page.
-- `fbjs -v/--version`  - Shows the CLI version.
-- `fbjs  --output`     - Specify the output folder destination.
-- `fbjs  --headful`    - Disable headless mode.
-- `fbjs  init`         - Initialize user configuration.
-- `fbjs  --group-ids`  - Indicates which groups ids that we want to scrape (seperated by commas).
+- A TypeScript CLI available at [Github fbjs-cli repo](https://github.com/Makepad-fr/fbjs-cli)
 
 ## Contributors ✨
 
