@@ -38,10 +38,13 @@ export async function sleep(duration: number): Promise<void> {
  * Function automatically infinite scrolls and sleeps
  */
 export async function autoScroll(): Promise<void> {
+  const internalSleep = async (duration: number): Promise<void> => new Promise(((resolve) => {
+    setTimeout(resolve, duration);
+  }));
   for (let i = 0; i < Math.round((Math.random() * 10) + 10); i += 1) {
     window.scrollBy(0, document.body.scrollHeight);
     // eslint-disable-next-line no-await-in-loop
-    await sleep(
+    await internalSleep(
       Math.round(
         (Math.random() * 4000) + 1000,
       ),
