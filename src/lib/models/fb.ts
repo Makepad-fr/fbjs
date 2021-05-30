@@ -4,12 +4,18 @@ import fs from 'fs';
 import selectors from '../utils/selectors';
 import Options from './options';
 import InitialisationError from '../errors/initialisationError';
-import { autoScroll, generateFacebookGroupURLById, getOldPublications } from '../utils/fbHelpers';
+import {
+  autoScroll,
+  generateFacebookGroupURLById,
+  getOldPublications,
+} from '../utils/fbHelpers';
 import GroupPost from './groupPost';
 import TwoFARequiredError from '../errors/twoFARequiredError';
 
 export default class Facebook {
   private url = 'https://facebook.com';
+
+  private altUrl = 'https://www.facebook.com';
 
   private config: Options | undefined;
 
@@ -118,15 +124,43 @@ export default class Facebook {
       throw new InitialisationError();
     }
     await this.page.waitForXPath(authCodeInputSelector);
-    console.log('Auth input selector is here');
     await (await this.page.$x(authCodeInputSelector))[0].focus();
     await this.page.keyboard.type(authCode);
+    await this.page.waitForXPath(authCodeContinueButtonSelector);
+    await (await this.page.$x(authCodeContinueButtonSelector))[0].click();
     await this.page.waitForXPath(authCodeContinueButtonSelector);
     await (await this.page.$x(authCodeContinueButtonSelector))[0].click();
     if (this.config.useCookies) {
       const cookies = await this.page.cookies();
       fs.writeFileSync(this.cookiesFilePath, JSON.stringify(cookies, null, 2));
     }
+    do {
+      await this.page.waitForNavigation({ timeout: 10000000 });
+      const u = new URL(this.page.url());
+      if (u.pathname === '/') {
+        break;
+      }
+      await this.page.waitForXPath(authCodeContinueButtonSelector);
+      await (await this.page.$x(authCodeContinueButtonSelector))[0].click();
+    } while (this.page.url() !== this.url && this.page.url() !== this.altUrl);
+    if (this.config.disableAssets) {
+      await this.disableAssets();
+    }
+    if (this.config.useCookies) {
+      const cookies = await this.page.cookies();
+      if (this.cookiesFilePath === undefined) {
+        this.cookiesFilePath = 'fbjs_cookies';
+      }
+      fs.writeFileSync(`./${this.cookiesFilePath}.json`, JSON.stringify(cookies, null, 2));
+    }
+  }
+
+  /**
+   * Function closes everything
+   */
+  public async close(): Promise<void> {
+    this.page?.close();
+    this.browser?.close();
   }
 
   /**
@@ -139,16 +173,24 @@ export default class Facebook {
     password: string,
   ) {
     if (this.page === undefined || this.config === undefined) {
+      console.error('Not initialised');
       throw new InitialisationError();
     }
     // Goes to base facebook url
     await this.page.goto(this.url);
-    await this.page.waitForXPath('//button[@data-cookiebanner="accept_button"]');
-    const acceptCookiesButton = (await this.page.$x('//button[@data-cookiebanner="accept_button"]'))[0];
-    await this.page.evaluate((el) => {
-      el.focus();
-      el.click();
-    }, acceptCookiesButton);
+    console.log('Navigated to the page');
+    console.log('Waiting for cookie banner');
+    try {
+      await this.page.waitForXPath('//button[@data-cookiebanner="accept_button"]');
+      const acceptCookiesButton = (await this.page.$x('//button[@data-cookiebanner="accept_button"]'))[0];
+      await this.page.evaluate((el) => {
+        el.focus();
+        el.click();
+      }, acceptCookiesButton);
+    } catch {
+      console.log('cookie button did not appear');
+    }
+
     /**
          * Waiting for login form JQuery selector to avoid
          * that forms elements to be not found
@@ -304,7 +346,7 @@ export default class Facebook {
              * */
       // Both console.log statement above are same
 
-      await autoScroll();
+      await this.page.evaluate(autoScroll);
     } while (isAnyNewPosts === true);
     console.info(
       `${groupName
