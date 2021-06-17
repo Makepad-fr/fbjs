@@ -173,13 +173,10 @@ export default class Facebook {
     password: string,
   ) {
     if (this.page === undefined || this.config === undefined) {
-      console.error('Not initialised');
       throw new InitialisationError();
     }
     // Goes to base facebook url
     await this.page.goto(this.url);
-    console.log('Navigated to the page');
-    console.log('Waiting for cookie banner');
     try {
       await this.page.waitForXPath('//button[@data-cookiebanner="accept_button"]');
       const acceptCookiesButton = (await this.page.$x('//button[@data-cookiebanner="accept_button"]'))[0];
@@ -188,7 +185,8 @@ export default class Facebook {
         el.click();
       }, acceptCookiesButton);
     } catch {
-      console.log('cookie button did not appear');
+      // We can not have empty blocks, so we are calling a function which do literally nothing
+      (() => {})();
     }
 
     /**
@@ -215,7 +213,6 @@ export default class Facebook {
     try {
       await this.page.waitForXPath('//form[contains(concat(" ", normalize-space(@class), " "), " checkpoint")]');
     } catch (e) {
-      console.log('2FA disabled');
       await this.page.waitForXPath('//div[@data-pagelet="Stories"]');
       if (this.config.disableAssets) {
         await this.disableAssets();
@@ -236,7 +233,7 @@ export default class Facebook {
      * Function saves the group posts for the given groupId
      * @param groupId
      */
-  public async getGroupPosts(groupId: number, outputFileName: string|undefined) {
+  public async getGroupPosts(groupId: number, outputFileName: string | undefined) {
     if (this.page === undefined || this.config === undefined) {
       throw new InitialisationError();
     }
@@ -258,9 +255,6 @@ export default class Facebook {
       (el: { textContent: any }) => el.textContent,
       groupNameHtmlElement,
     );
-    if (this.config.debug === true) {
-      console.log(`Group title ${groupName}`);
-    }
 
     groupName = groupName.replace(/\//g, '_');
     if (outputFileName === undefined) {
@@ -272,9 +266,6 @@ export default class Facebook {
     // List contains all publications
     // Variable indicates if any new posts found on the page
     do {
-      if (this.config.debug === true) {
-        console.log(`Total posts before scraping ${allPublicationsList.length}`);
-      }
       // eslint-disable-next-line no-var
       isAnyNewPosts = false;
       await this.page.waitForXPath(
@@ -333,27 +324,8 @@ export default class Facebook {
         }
       }
 
-      /**
-             * All html group post elements are added on
-             * global publictions list (allPublictionList)
-             * */
-      if (this.config.debug === true) {
-        console.log(`Total posts before scrolling${allPublicationsList.length}`);
-      }
-      /**
-             *  console.log(`Total posts before
-             * scrolling ${allPublicationsList.length}`);
-             * */
-      // Both console.log statement above are same
-
       await this.page.evaluate(autoScroll);
     } while (isAnyNewPosts === true);
-    console.info(
-      `${groupName
-      } Facebook group's posts scraped: ${
-        allPublicationsList.length
-      } posts found`,
-    );
     fs.writeFileSync(
       outputFileName,
       JSON.stringify(allPublicationsList, undefined, 4),
