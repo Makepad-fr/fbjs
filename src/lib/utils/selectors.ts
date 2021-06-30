@@ -18,6 +18,7 @@ export default {
     group_post_author_avatar: 'image',
     group_post_link: 'span span span a',
     group_post_content: 'div[dir=auto][class]',
+    group_post_content_expand_button: 'div[role=button]',
     group_post_attachment: 'div[dir=auto][class] + div',
     group_post_video: 'video',
     group_post_img: 'img',
