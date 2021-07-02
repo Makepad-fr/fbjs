@@ -5,7 +5,7 @@ import selectors from '../utils/selectors';
 import Options from './options';
 import InitialisationError from '../errors/initialisationError';
 import {
-  autoScroll,
+  // autoScroll,
   generateFacebookGroupURLById,
   getOldPublications,
 } from '../utils/fbHelpers';
@@ -250,7 +250,9 @@ export default class Facebook {
          * */
     // Getting all Facebook group posts
 
-    const groupNameHtmlElement = (await this.page.$x('/html/head/title'))[0];
+    const groupNameHtmlElement = (await this.page.$x(
+      selectors.facebook_group_new.xpath.group_name,
+    ))[0];
     let groupName = await this.page.evaluate(
       (el: { textContent: any }) => el.textContent,
       groupNameHtmlElement,
@@ -262,6 +264,7 @@ export default class Facebook {
       outputFileName = `${this.config.output + groupName}.json`;
     }
     const allPublicationsList = getOldPublications(outputFileName);
+    console.log(groupName);
 
     // List contains all publications
     // Variable indicates if any new posts found on the page
@@ -269,32 +272,44 @@ export default class Facebook {
       // eslint-disable-next-line no-var
       isAnyNewPosts = false;
       await this.page.waitForXPath(
-        '//article/div[@class="story_body_container"]',
+        selectors.facebook_group_new.xpath.group_feed_container
+        + selectors.facebook_group_new.xpath.group_post_div,
+      );
+      console.log(
+        selectors.facebook_group_new.xpath.group_feed_container
+        + selectors.facebook_group_new.xpath.group_post_div,
       );
       const groupPostsHtmlElements = await this.page.$x(
-        '//article/div[@class="story_body_container"]/div[1]',
+        selectors.facebook_group_new.xpath.group_feed_container
+        + selectors.facebook_group_new.xpath.group_post_div,
       );
-      const groupPostsAuthorHtmlElemments = await this.page.$x(
+      /* const groupPostsAuthorHtmlElemments = await this.page.$x(
         '((//article/div[@class="story_body_container"])'
                 + '[child::div])/header//strong[1]',
-      );
+      ); */
 
       // Looping on each group post html elemen to get text and author
-      for (let i = 0; i < groupPostsAuthorHtmlElemments.length; i += 1) {
+      /* for (let i = 0; i < groupPostsAuthorHtmlElemments.length; i += 1) {
         const [postAuthorName, postTextContent] = await this.page.evaluate(
           (el: any, eb: any): any => [el.textContent, eb.textContent],
           groupPostsAuthorHtmlElemments[i],
           groupPostsHtmlElements[i],
         );
         await groupPostsAuthorHtmlElemments[i]
-          .$x('//article/div[@class="story_body_container"]//span[1]/p');
+          .$x('//article/div[@class="story_body_container"]//span[1]/p'); */
+
+      for (let i = 0; i < groupPostsHtmlElements.length; i += 1) {
+        const [postTextContent] = await this.page.evaluate(
+          (el: any): any => [el.textContent],
+          groupPostsHtmlElements[i],
+        );
 
         // crates a publication object which contains our publication
         const publication: GroupPost = {
-          post: postAuthorName,
-          author: postTextContent,
+          post: postTextContent,
+          // author: postTextContent,
         };
-
+        console.log(publication);
         // variable indicates if publication exists in allPublicationsList
         let isPublicationExists = false;
 
@@ -303,7 +318,7 @@ export default class Facebook {
           const otherPublication = allPublicationsList[a];
           if (
             (publication.post === otherPublication.post)
-                        && (publication.author === otherPublication.author)
+          // && (publication.author === otherPublication.author)
           ) {
             // If publication exists in allPublictationList
             isPublicationExists = true;
@@ -323,8 +338,8 @@ export default class Facebook {
           isAnyNewPosts = true;
         }
       }
-
-      await this.page.evaluate(autoScroll);
+      console.log('isAnyNewPosts: ', isAnyNewPosts);
+      // await this.page.evaluate(autoScroll);
     } while (isAnyNewPosts === true);
     fs.writeFileSync(
       outputFileName,

@@ -10,4 +10,7 @@ module.exports = {
     extends: [
         'airbnb-typescript',
     ],
+    rules: {
+        'no-console': 0
+    }
 };

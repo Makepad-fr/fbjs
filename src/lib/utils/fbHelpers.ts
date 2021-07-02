@@ -2,7 +2,7 @@ import fs from 'fs';
 import GroupPost from '../models/groupPost';
 
 export function generateFacebookGroupURLById(id: number): string {
-  return `https://m.facebook.com/groups/${id}/`;
+  return `https://www.facebook.com/groups/${id}/`;
 }
 /**
  * Function gets old publications.

@@ -12,7 +12,7 @@ export default {
   },
   facebook_group_new: {
     css: {
-      group_name: 'html > head > title',
+      group_name: 'title',
       group_feed_container: 'div[role=feed]',
       group_post_div: 'div[role=article][aria-labelledby]',
       group_post_author: 'h2 span a',
@@ -25,10 +25,11 @@ export default {
       group_post_img: 'img',
     },
     xpath: {
-      group_name: '/html/head/title',
+      group_name: '//title',
       group_feed_container: '//div[@role="feed"]',
       group_post_div: '//div[@role="article"][@aria-labelledby]',
       group_post_author: '//h2//span//a',
+      group_post_author2: '//h2//strong//span',
       group_post_author_avatar: '//object//*[name()="image"]',
       group_post_link: '//span[@dir="auto"]/span//a',
       group_post_content: '//div[@dir="auto"][@class]',
