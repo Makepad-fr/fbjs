@@ -14,7 +14,7 @@ import TwoFARequiredError from '../errors/twoFARequiredError';
 
 declare global {
   interface Window {
-    submissions: Element[];
+    posts: HTMLElement[];
   }
 }
 
@@ -253,7 +253,7 @@ export default class Facebook {
       },
     );
 
-    const groupNameElm = await this.page.$(selectors.facebook_group_new.css.group_name);
+    const groupNameElm = await this.page.$(selectors.facebook_group.group_name);
     let groupName = await this.page.evaluate(
       (el: { textContent: any }) => el.textContent,
       groupNameElm,
@@ -267,49 +267,69 @@ export default class Facebook {
       outputFileName = `${this.config.output + groupName}.json`;
     }
 
+    /**
+     * Save post to the database
+     * @param postData
+     */
+    const savePost = (postData: GroupPost): void => {
+      const allPublicationsList = getOldPublications(outputFileName!);
+      allPublicationsList.push(postData);
+      fs.writeFileSync(
+        outputFileName!,
+        JSON.stringify(allPublicationsList, undefined, 4),
+        { encoding: 'utf8' },
+      );
+    };
+
     // Start Scrolling!
     this.page.evaluate(autoScroll);
 
     /**
      * Waiting for the group feed container to continue
      * and to avoid the selector not found error.
-     * Note that we ignore any submissions outside this container
+     * Note that we ignore any posts outside this container
      * specifically announcements, because they don't follow
      * the same sorting method as the others.
      * */
     await this.page.waitForSelector(
-      selectors.facebook_group_new.css.group_feed_container,
+      selectors.facebook_group.group_feed_container,
     );
 
-    // Handle new added submissions
-    const handleSubmissions = async () => {
-      const submission = await this.page?.evaluateHandle(
-        () => window.submissions.shift(),
+    /**
+     * Handle new added posts
+     */
+    const handlePosts = async () => {
+      const post = await this.page?.evaluateHandle(
+        () => window.posts.shift(),
       );
-      const submissionData = await this.parsePost(<ElementHandle>submission);
-      console.log(submissionData);
-      this.savePost(submissionData, <string>outputFileName);
+      const postData = await this.parsePost(<ElementHandle>post);
+      console.log(postData);
+      savePost(postData);
     };
-    this.page.exposeFunction('handleSubmissions', handleSubmissions);
+    this.page.exposeFunction('handlePosts', handlePosts);
 
-    // Listen to new added submissions
-    this.page.evaluate((cssSelectors: any) => {
-      window.submissions = [];
-      const target = document.querySelector(cssSelectors.group_feed_container)!;
+    // Listen to new added posts
+    this.page.evaluate((cssSelectors: typeof selectors) => {
+      window.posts = [];
+      const target = <HTMLElement>document.querySelector(
+        cssSelectors.facebook_group.group_feed_container,
+      );
       const observer = new MutationObserver((mutations) => {
         for (let i = 0; i < mutations.length; i += 1) {
           for (let j = 0; j < mutations[i].addedNodes.length; j += 1) {
-            const addedNode = <Element>mutations[i].addedNodes[j];
-            const post = addedNode.querySelector(cssSelectors.group_post_div);
-            if (post) {
-              window.submissions.push(post);
-              handleSubmissions();
+            const addedNode = <HTMLElement>mutations[i].addedNodes[j];
+            const postElm = <HTMLElement>addedNode.querySelector(
+              cssSelectors.facebook_post.post_element,
+            );
+            if (postElm) {
+              window.posts.push(postElm);
+              handlePosts();
             }
           }
         }
       });
       observer.observe(target, { childList: true });
-    }, selectors.facebook_group_new.css);
+    }, selectors);
   }
 
   /**
@@ -322,25 +342,31 @@ export default class Facebook {
     }
 
     const { authorName, content } = await this.page.evaluate(
-      async (postElm: Element, cssSelectors: any): Promise<any> => {
+      async (postElm: HTMLElement, cssSelectors: typeof selectors): Promise<any> => {
         let postAuthorElm;
-        postAuthorElm = postElm.querySelector(cssSelectors.group_post_author);
+        postAuthorElm = <HTMLElement>postElm.querySelector(
+          cssSelectors.facebook_post.post_author,
+        );
         let postAuthorName;
         // Not all posts provide author profile url
         if (postAuthorElm) {
           postAuthorName = postAuthorElm.innerText;
         } else {
-          postAuthorElm = postElm.querySelector(cssSelectors.group_post_author2);
+          postAuthorElm = <HTMLElement>postElm.querySelector(
+            cssSelectors.facebook_post.post_author2,
+          );
           postAuthorName = postAuthorElm.innerText;
         }
 
-        const postContentElm = postElm.querySelector(cssSelectors.group_post_content);
+        const postContentElm = <HTMLElement>postElm.querySelector(
+          cssSelectors.facebook_post.post_content,
+        );
         let postContent;
         // Some posts don't have text, so they won't have postContentElm
         if (postContentElm) {
           // We should click the "See More..." button before extracting the post content
-          const expandButton = postContentElm.querySelector(
-            cssSelectors.group_post_content_expand_button,
+          const expandButton = <HTMLElement>postContentElm.querySelector(
+            cssSelectors.facebook_post.post_content_expand_button,
           );
           if (expandButton) {
             postContent = await new Promise((res) => {
@@ -365,33 +391,15 @@ export default class Facebook {
           content: postContent,
         };
       },
-      post, selectors.facebook_group_new.css,
+      post, selectors,
     );
 
-    // crates a publication object which contains our publication
-    const publication: GroupPost = {
+    // crates a submission object which contains our submission
+    const submission: GroupPost = {
       author: authorName,
       post: content,
     };
 
-    return publication;
-  }
-
-  /**
-   * Save post to the database
-   * @param postData
-   */
-  public savePost(postData: GroupPost, outputFileName: string) {
-    if (this.page === undefined || this.config === undefined) {
-      throw new InitialisationError();
-    }
-
-    const allPublicationsList = getOldPublications(outputFileName);
-    allPublicationsList.push(postData);
-    fs.writeFileSync(
-      outputFileName,
-      JSON.stringify(allPublicationsList, undefined, 4),
-      { encoding: 'utf8' },
-    );
+    return submission;
   }
 }
