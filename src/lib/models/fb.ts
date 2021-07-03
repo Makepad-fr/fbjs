@@ -321,13 +321,48 @@ export default class Facebook {
       throw new InitialisationError();
     }
 
-    const { postAuthorName, postContent } = await this.page.evaluate(
-      (postElm: Element, cssSelectors: any): any => {
-        const postAuthorElm = postElm.querySelector(cssSelectors.group_post_author2);
+    const { authorName, content } = await this.page.evaluate(
+      async (postElm: Element, cssSelectors: any): Promise<any> => {
+        let postAuthorElm;
+        postAuthorElm = postElm.querySelector(cssSelectors.group_post_author);
+        let postAuthorName;
+        // Not all posts provide author profile url
+        if (postAuthorElm) {
+          postAuthorName = postAuthorElm.innerText;
+        } else {
+          postAuthorElm = postElm.querySelector(cssSelectors.group_post_author2);
+          postAuthorName = postAuthorElm.innerText;
+        }
+
         const postContentElm = postElm.querySelector(cssSelectors.group_post_content);
+        let postContent;
+        // Some posts don't have text, so they won't have postContentElm
+        if (postContentElm) {
+          // We should click the "See More..." button before extracting the post content
+          const expandButton = postContentElm.querySelector(
+            cssSelectors.group_post_content_expand_button,
+          );
+          if (expandButton) {
+            postContent = await new Promise((res) => {
+              const observer = new MutationObserver(
+                () => {
+                  observer.disconnect();
+                  res(postContentElm.innerText);
+                },
+              );
+              observer.observe(postContentElm, { childList: true, subtree: true });
+              expandButton.click();
+            });
+          } else {
+            postContent = postContentElm.innerText;
+          }
+        } else {
+          postContent = '';
+        }
+
         return {
-          postAuthorName: postAuthorElm.innerText,
-          postContent: postContentElm.innerText,
+          authorName: postAuthorName,
+          content: postContent,
         };
       },
       post, selectors.facebook_group_new.css,
@@ -335,8 +370,8 @@ export default class Facebook {
 
     // crates a publication object which contains our publication
     const publication: GroupPost = {
-      author: postAuthorName,
-      post: postContent,
+      author: authorName,
+      post: content,
     };
 
     return publication;
