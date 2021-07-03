@@ -1,16 +1,22 @@
 /* eslint-disable no-await-in-loop */
-import puppeteer from 'puppeteer';
+import puppeteer, { ElementHandle } from 'puppeteer';
 import fs from 'fs';
 import selectors from '../utils/selectors';
 import Options from './options';
 import InitialisationError from '../errors/initialisationError';
 import {
-  // autoScroll,
+  autoScroll,
   generateFacebookGroupURLById,
   getOldPublications,
 } from '../utils/fbHelpers';
 import GroupPost from './groupPost';
 import TwoFARequiredError from '../errors/twoFARequiredError';
+
+declare global {
+  interface Window {
+    submissions: Element[];
+  }
+}
 
 export default class Facebook {
   private url = 'https://facebook.com';
@@ -38,10 +44,10 @@ export default class Facebook {
   }
 
   /**
-     * Function initialise the facebook module
-     * @param options browser options
-     * @param cookiesFilePath The name of the file to save cookies
-     */
+   * Function initialise the facebook module
+   * @param options browser options
+   * @param cookiesFilePath The name of the file to save cookies
+   */
   public static async init(
     options: Options,
     cookiesFilePath: string = 'fbjs_cookies.json',
@@ -69,10 +75,10 @@ export default class Facebook {
     }
     const browser = await puppeteer.launch(browserOptions);
     /**
-         * We need an incognito browser to avoid notification
-         *  and location permissions of Facebook
-         *
-         */
+     * We need an incognito browser to avoid notification
+     * and location permissions of Facebook
+     *
+     */
     const incognitoContext = await browser.createIncognitoBrowserContext();
     // Creates a new borwser tab
     const page = await incognitoContext.newPage();
@@ -85,9 +91,9 @@ export default class Facebook {
   }
 
   /**
-     * Function disables the loading of assets to improve performance
-     * @private
-     */
+   * Function disables the loading of assets to improve performance
+   * @private
+   */
   private async disableAssets() {
     if (this.page === undefined) {
       throw new InitialisationError();
@@ -164,10 +170,10 @@ export default class Facebook {
   }
 
   /**
-     * Function handles the Facebook login
-     * @param username The facebook username
-     * @param password The facebook password
-     */
+   * Function handles the Facebook login
+   * @param username The facebook username
+   * @param password The facebook password
+   */
   public async login(
     username: string,
     password: string,
@@ -190,9 +196,9 @@ export default class Facebook {
     }
 
     /**
-         * Waiting for login form JQuery selector to avoid
-         * that forms elements to be not found
-         * */
+     * Waiting for login form JQuery selector to avoid
+     * that forms elements to be not found
+     * */
     await this.page.waitForSelector(selectors.login_form.parent);
     // Focusing to the email input
     await this.page.focus(selectors.login_form.email);
@@ -230,122 +236,127 @@ export default class Facebook {
   }
 
   /**
-     * Function saves the group posts for the given groupId
-     * @param groupId
-     */
+   * Function saves the group posts for the given groupId
+   * @param groupId
+   * @param outputFileName
+   */
   public async getGroupPosts(groupId: number, outputFileName: string | undefined) {
     if (this.page === undefined || this.config === undefined) {
       throw new InitialisationError();
     }
     const groupUrl = generateFacebookGroupURLById(groupId);
-    let isAnyNewPosts: boolean = false;
     await this.page.goto(
       groupUrl,
-      { timeout: 600000 },
+      {
+        timeout: 600000,
+        waitUntil: 'domcontentloaded',
+      },
     );
 
-    /**
-         * Waiting for the group stories container to continue
-         * and to avoid the selector not found error
-         * */
-    // Getting all Facebook group posts
-
-    const groupNameHtmlElement = (await this.page.$x(
-      selectors.facebook_group_new.xpath.group_name,
-    ))[0];
+    const groupNameElm = await this.page.$(selectors.facebook_group_new.css.group_name);
     let groupName = await this.page.evaluate(
       (el: { textContent: any }) => el.textContent,
-      groupNameHtmlElement,
+      groupNameElm,
     );
+    console.log(groupName);
 
+    // The validation here is much complicated than just replacing a slash with an underscore
     groupName = groupName.replace(/\//g, '_');
     if (outputFileName === undefined) {
       // eslint-disable-next-line no-param-reassign
       outputFileName = `${this.config.output + groupName}.json`;
     }
-    const allPublicationsList = getOldPublications(outputFileName);
-    console.log(groupName);
 
-    // List contains all publications
-    // Variable indicates if any new posts found on the page
-    do {
-      // eslint-disable-next-line no-var
-      isAnyNewPosts = false;
-      await this.page.waitForXPath(
-        selectors.facebook_group_new.xpath.group_feed_container
-        + selectors.facebook_group_new.xpath.group_post_div,
+    // Start Scrolling!
+    this.page.evaluate(autoScroll);
+
+    /**
+     * Waiting for the group feed container to continue
+     * and to avoid the selector not found error.
+     * Note that we ignore any submissions outside this container
+     * specifically announcements, because they don't follow
+     * the same sorting method as the others.
+     * */
+    await this.page.waitForSelector(
+      selectors.facebook_group_new.css.group_feed_container,
+    );
+
+    // Handle new added submissions
+    const handleSubmissions = async () => {
+      const submission = await this.page?.evaluateHandle(
+        () => window.submissions.shift(),
       );
-      console.log(
-        selectors.facebook_group_new.xpath.group_feed_container
-        + selectors.facebook_group_new.xpath.group_post_div,
-      );
-      const groupPostsHtmlElements = await this.page.$x(
-        selectors.facebook_group_new.xpath.group_feed_container
-        + selectors.facebook_group_new.xpath.group_post_div,
-      );
-      /* const groupPostsAuthorHtmlElemments = await this.page.$x(
-        '((//article/div[@class="story_body_container"])'
-                + '[child::div])/header//strong[1]',
-      ); */
+      const submissionData = await this.parsePost(<ElementHandle>submission);
+      console.log(submissionData);
+      this.savePost(submissionData, <string>outputFileName);
+    };
+    this.page.exposeFunction('handleSubmissions', handleSubmissions);
 
-      // Looping on each group post html elemen to get text and author
-      /* for (let i = 0; i < groupPostsAuthorHtmlElemments.length; i += 1) {
-        const [postAuthorName, postTextContent] = await this.page.evaluate(
-          (el: any, eb: any): any => [el.textContent, eb.textContent],
-          groupPostsAuthorHtmlElemments[i],
-          groupPostsHtmlElements[i],
-        );
-        await groupPostsAuthorHtmlElemments[i]
-          .$x('//article/div[@class="story_body_container"]//span[1]/p'); */
-
-      for (let i = 0; i < groupPostsHtmlElements.length; i += 1) {
-        const [postTextContent] = await this.page.evaluate(
-          (el: any): any => [el.textContent],
-          groupPostsHtmlElements[i],
-        );
-
-        // crates a publication object which contains our publication
-        const publication: GroupPost = {
-          post: postTextContent,
-          // author: postTextContent,
-        };
-        console.log(publication);
-        // variable indicates if publication exists in allPublicationsList
-        let isPublicationExists = false;
-
-        // Check if publication exists in allPublicationsList
-        for (let a = 0; a < allPublicationsList.length; a += 1) {
-          const otherPublication = allPublicationsList[a];
-          if (
-            (publication.post === otherPublication.post)
-          // && (publication.author === otherPublication.author)
-          ) {
-            // If publication exists in allPublictationList
-            isPublicationExists = true;
-            break;
-          } else {
-            // if publication does not exists in allPublictationList
-            isPublicationExists = false;
+    // Listen to new added submissions
+    this.page.evaluate((cssSelectors: any) => {
+      window.submissions = [];
+      const target = document.querySelector(cssSelectors.group_feed_container)!;
+      const observer = new MutationObserver((mutations) => {
+        for (let i = 0; i < mutations.length; i += 1) {
+          for (let j = 0; j < mutations[i].addedNodes.length; j += 1) {
+            const addedNode = <Element>mutations[i].addedNodes[j];
+            const post = addedNode.querySelector(cssSelectors.group_post_div);
+            if (post) {
+              window.submissions.push(post);
+              handleSubmissions();
+            }
           }
         }
+      });
+      observer.observe(target, { childList: true });
+    }, selectors.facebook_group_new.css);
+  }
 
-        /**
-                 * Once we got the response from the check
-                 * publication in allPublicationsList
-                 * */
-        if (isPublicationExists === false) {
-          allPublicationsList.push(publication);
-          isAnyNewPosts = true;
-        }
-      }
-      console.log('isAnyNewPosts: ', isAnyNewPosts);
-      // await this.page.evaluate(autoScroll);
-    } while (isAnyNewPosts === true);
+  /**
+   * Extract data from a group post
+   * @param post
+   */
+  public async parsePost(post: ElementHandle) {
+    if (this.page === undefined || this.config === undefined) {
+      throw new InitialisationError();
+    }
+
+    const { postAuthorName, postContent } = await this.page.evaluate(
+      (postElm: Element, cssSelectors: any): any => {
+        const postAuthorElm = postElm.querySelector(cssSelectors.group_post_author2);
+        const postContentElm = postElm.querySelector(cssSelectors.group_post_content);
+        return {
+          postAuthorName: postAuthorElm.innerText,
+          postContent: postContentElm.innerText,
+        };
+      },
+      post, selectors.facebook_group_new.css,
+    );
+
+    // crates a publication object which contains our publication
+    const publication: GroupPost = {
+      author: postAuthorName,
+      post: postContent,
+    };
+
+    return publication;
+  }
+
+  /**
+   * Save post to the database
+   * @param postData
+   */
+  public savePost(postData: GroupPost, outputFileName: string) {
+    if (this.page === undefined || this.config === undefined) {
+      throw new InitialisationError();
+    }
+
+    const allPublicationsList = getOldPublications(outputFileName);
+    allPublicationsList.push(postData);
     fs.writeFileSync(
       outputFileName,
       JSON.stringify(allPublicationsList, undefined, 4),
       { encoding: 'utf8' },
     );
-    // await browser.close();
   }
 }

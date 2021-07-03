@@ -16,6 +16,7 @@ export default {
       group_feed_container: 'div[role=feed]',
       group_post_div: 'div[role=article][aria-labelledby]',
       group_post_author: 'h2 span a',
+      group_post_author2: 'h2 strong span',
       group_post_author_avatar: 'object image',
       group_post_link: 'span[dir=auto] > span a',
       group_post_content: 'div[dir=auto][class]',
