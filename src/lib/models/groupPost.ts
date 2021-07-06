@@ -1,4 +1,10 @@
 export default interface GroupPost {
-  author: string;
-  post: string;
+  authorName: string,
+  authorUrl: string | null,
+  authorAvatar: string,
+  date: string,
+  permalink: string,
+  id: string,
+  contentText: string | null,
+  contentHtml: string | null
 }

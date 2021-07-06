@@ -336,70 +336,128 @@ export default class Facebook {
    * Extract data from a group post
    * @param post
    */
-  public async parsePost(post: ElementHandle) {
+  public async parsePost(postHnd: ElementHandle) {
     if (this.page === undefined || this.config === undefined) {
       throw new InitialisationError();
     }
 
-    const { authorName, content } = await this.page.evaluate(
-      async (postElm: HTMLElement, cssSelectors: typeof selectors): Promise<any> => {
-        let postAuthorElm;
-        postAuthorElm = <HTMLElement>postElm.querySelector(
+    const submissionData = await this.page.evaluate(
+      async (postElm: HTMLElement, cssSelectors: typeof selectors) => {
+        let authorElm;
+        authorElm = <HTMLElement>postElm.querySelector(
           cssSelectors.facebook_post.post_author,
         );
-        let postAuthorName;
+        let authorName;
+        let authorUrl;
         // Not all posts provide author profile url
-        if (postAuthorElm) {
-          postAuthorName = postAuthorElm.innerText;
+        if (authorElm) {
+          authorName = authorElm.innerText;
+          authorUrl = authorElm.getAttribute('href')!.replace(/(\/?\?.+)$/, '');
         } else {
-          postAuthorElm = <HTMLElement>postElm.querySelector(
+          authorElm = <HTMLElement>postElm.querySelector(
             cssSelectors.facebook_post.post_author2,
           );
-          postAuthorName = postAuthorElm.innerText;
+          authorName = authorElm.innerText;
+          authorUrl = null;
         }
 
-        const postContentElm = <HTMLElement>postElm.querySelector(
+        const authorAvatarElm = <HTMLElement>postElm.querySelector(
+          cssSelectors.facebook_post.post_author_avatar,
+        );
+        const authorAvatar = authorAvatarElm.getAttribute('xlink:href')!;
+
+        const contentElm = <HTMLElement>postElm.querySelector(
           cssSelectors.facebook_post.post_content,
         );
-        let postContent;
+        let contentText;
+        let contentHtml;
         // Some posts don't have text, so they won't have postContentElm
-        if (postContentElm) {
+        if (contentElm) {
           // We should click the "See More..." button before extracting the post content
-          const expandButton = <HTMLElement>postContentElm.querySelector(
+          const expandButton = <HTMLElement>contentElm.querySelector(
             cssSelectors.facebook_post.post_content_expand_button,
           );
           if (expandButton) {
-            postContent = await new Promise((res) => {
+            await new Promise<void>((res) => {
               const observer = new MutationObserver(
                 () => {
                   observer.disconnect();
-                  res(postContentElm.innerText);
+                  contentText = contentElm.innerText;
+                  contentHtml = contentElm.innerHTML;
+                  res();
                 },
               );
-              observer.observe(postContentElm, { childList: true, subtree: true });
+              observer.observe(contentElm, { childList: true, subtree: true });
               expandButton.click();
             });
           } else {
-            postContent = postContentElm.innerText;
+            contentText = contentElm.innerText;
+            contentHtml = contentElm.innerHTML;
           }
         } else {
-          postContent = '';
+          contentText = null;
+          contentHtml = null;
         }
 
         return {
-          authorName: postAuthorName,
-          content: postContent,
+          authorName,
+          authorUrl,
+          authorAvatar,
+          contentText,
+          contentHtml,
         };
       },
-      post, selectors,
+      postHnd, selectors,
     );
 
+    const submissionLink = await (async () => {
+      const postLinkHnd = await postHnd.$(
+        selectors.facebook_post.post_link,
+      );
+      await postLinkHnd!.hover();
+
+      return this.page?.evaluate(
+        async (postLinkElm: HTMLElement) => {
+          const span = postLinkElm.parentElement!;
+          let date;
+          let permalink;
+          let id;
+          await new Promise<void>((res) => {
+            const observer = new MutationObserver(
+              () => {
+                observer.disconnect();
+                const tooltipID = span.getAttribute('aria-describedby')!;
+                const tooltip = document.getElementById(tooltipID)!;
+                date = tooltip.innerText;
+                permalink = postLinkElm.getAttribute('href')!.replace(/(\/\?.+)$/, '');
+                id = permalink.replace(/^.+\//, '');
+                res();
+              },
+            );
+            observer.observe(span, { attributes: true, attributeFilter: ['aria-describedby'] });
+          });
+          return {
+            date,
+            permalink,
+            id,
+          };
+        },
+        postLinkHnd,
+      );
+    })();
+
     // crates a submission object which contains our submission
-    const submission: GroupPost = {
-      author: authorName,
-      post: content,
+    const groupPost: GroupPost = {
+      authorName: <string>submissionData.authorName,
+      authorUrl: <string | null>submissionData.authorUrl,
+      authorAvatar: <string>submissionData.authorAvatar,
+      date: <string>submissionLink!.date!,
+      permalink: <string>submissionLink!.permalink!,
+      id: <string>submissionLink!.id!,
+      contentText: <string | null>submissionData.contentText,
+      contentHtml: <string | null>submissionData.contentHtml,
     };
 
-    return submission;
+    return groupPost;
   }
 }
