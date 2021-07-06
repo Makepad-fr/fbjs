@@ -5,7 +5,7 @@ import selectors from '../utils/selectors';
 import Options from './options';
 import InitialisationError from '../errors/initialisationError';
 import {
-  autoScroll,
+  // autoScroll,
   generateFacebookGroupURLById,
   getOldPublications,
 } from '../utils/fbHelpers';
@@ -282,7 +282,7 @@ export default class Facebook {
     };
 
     // Start Scrolling!
-    this.page.evaluate(autoScroll);
+    // this.page.evaluate(autoScroll);
 
     /**
      * Waiting for the group feed container to continue
@@ -295,16 +295,30 @@ export default class Facebook {
       selectors.facebook_group.group_feed_container,
     );
 
+    let busy = false;
+
     /**
      * Handle new added posts
      */
-    const handlePosts = async () => {
-      const post = await this.page?.evaluateHandle(
+    const handlePosts = async (force: boolean): Promise<void> => {
+      if (busy && !force) return;
+      busy = true;
+      const postHnd = await this.page?.evaluateHandle(
         () => window.posts.shift(),
       );
-      const postData = await this.parsePost(<ElementHandle>post);
-      console.log(postData);
-      savePost(postData);
+      console.log(postHnd?.toString());
+      if (postHnd?.toString() !== 'JSHandle:undefined') {
+        try {
+          const postData = await this.parsePost(<ElementHandle>postHnd);
+          console.log(postData);
+          savePost(postData);
+          handlePosts(true);
+        } catch (err) {
+          console.error(err);
+        }
+      } else {
+        busy = false;
+      }
     };
     this.page.exposeFunction('handlePosts', handlePosts);
 
@@ -323,7 +337,7 @@ export default class Facebook {
             );
             if (postElm) {
               window.posts.push(postElm);
-              handlePosts();
+              handlePosts(false);
             }
           }
         }
@@ -340,6 +354,41 @@ export default class Facebook {
     if (this.page === undefined || this.config === undefined) {
       throw new InitialisationError();
     }
+
+    const submissionLink = await (async () => {
+      const postLinkHnd = await postHnd.$(
+        selectors.facebook_post.post_link,
+      );
+      await postLinkHnd!.hover();
+      return this.page?.evaluate(
+        async (postLinkElm: HTMLElement) => {
+          const span = postLinkElm.parentElement!;
+          let date;
+          let permalink;
+          let id;
+          await new Promise<void>((res) => {
+            const observer = new MutationObserver(
+              () => {
+                observer.disconnect();
+                const tooltipID = span.getAttribute('aria-describedby')!;
+                const tooltip = document.getElementById(tooltipID)!;
+                date = tooltip.innerText;
+                permalink = postLinkElm.getAttribute('href')!.replace(/(\/\?.+)$/, '');
+                id = permalink.replace(/^.+\//, '');
+                res();
+              },
+            );
+            observer.observe(span, { attributes: true, attributeFilter: ['aria-describedby'] });
+          });
+          return {
+            date,
+            permalink,
+            id,
+          };
+        },
+        postLinkHnd,
+      );
+    })();
 
     const submissionData = await this.page.evaluate(
       async (postElm: HTMLElement, cssSelectors: typeof selectors) => {
@@ -364,7 +413,12 @@ export default class Facebook {
         const authorAvatarElm = <HTMLElement>postElm.querySelector(
           cssSelectors.facebook_post.post_author_avatar,
         );
-        const authorAvatar = authorAvatarElm.getAttribute('xlink:href')!;
+        let authorAvatar;
+        if (authorAvatarElm) {
+          authorAvatar = authorAvatarElm.getAttribute('xlink:href')!;
+        } else {
+          authorAvatar = null;
+        }
 
         const contentElm = <HTMLElement>postElm.querySelector(
           cssSelectors.facebook_post.post_content,
@@ -410,47 +464,11 @@ export default class Facebook {
       postHnd, selectors,
     );
 
-    const submissionLink = await (async () => {
-      const postLinkHnd = await postHnd.$(
-        selectors.facebook_post.post_link,
-      );
-      await postLinkHnd!.hover();
-
-      return this.page?.evaluate(
-        async (postLinkElm: HTMLElement) => {
-          const span = postLinkElm.parentElement!;
-          let date;
-          let permalink;
-          let id;
-          await new Promise<void>((res) => {
-            const observer = new MutationObserver(
-              () => {
-                observer.disconnect();
-                const tooltipID = span.getAttribute('aria-describedby')!;
-                const tooltip = document.getElementById(tooltipID)!;
-                date = tooltip.innerText;
-                permalink = postLinkElm.getAttribute('href')!.replace(/(\/\?.+)$/, '');
-                id = permalink.replace(/^.+\//, '');
-                res();
-              },
-            );
-            observer.observe(span, { attributes: true, attributeFilter: ['aria-describedby'] });
-          });
-          return {
-            date,
-            permalink,
-            id,
-          };
-        },
-        postLinkHnd,
-      );
-    })();
-
     // crates a submission object which contains our submission
     const groupPost: GroupPost = {
       authorName: <string>submissionData.authorName,
       authorUrl: <string | null>submissionData.authorUrl,
-      authorAvatar: <string>submissionData.authorAvatar,
+      authorAvatar: <string | null>submissionData.authorAvatar,
       date: <string>submissionLink!.date!,
       permalink: <string>submissionLink!.permalink!,
       id: <string>submissionLink!.id!,

@@ -13,7 +13,7 @@ export default {
     post_element: 'div[role=article][aria-labelledby]',
     post_author: 'h2 span a',
     post_author2: 'h2 strong span',
-    post_author_avatar: 'object image',
+    post_author_avatar: 'svg image',
     post_link: 'span[dir=auto] > span a',
     post_content: 'div[dir=auto][class]',
     post_content_expand_button: 'div[role=button]',
