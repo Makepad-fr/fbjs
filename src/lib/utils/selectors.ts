@@ -6,7 +6,7 @@ export default {
     parent: 'form',
   },
   facebook_group: {
-    group_name: 'title',
+    group_name: 'h1[dir=auto] span[dir=auto]',
     group_feed_container: 'div[role=feed]',
   },
   facebook_post: {

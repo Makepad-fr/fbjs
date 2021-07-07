@@ -249,9 +249,10 @@ export default class Facebook {
       groupUrl,
       {
         timeout: 600000,
-        waitUntil: 'domcontentloaded',
       },
     );
+
+    await this.page.waitForSelector(selectors.facebook_group.group_name);
 
     const groupNameElm = await this.page.$(selectors.facebook_group.group_name);
     let groupName = await this.page.evaluate(
@@ -283,6 +284,7 @@ export default class Facebook {
 
     // Start Scrolling!
     // this.page.evaluate(autoScroll);
+    this.page.evaluate(() => window.scrollBy(0, document.body.scrollHeight));
 
     /**
      * Waiting for the group feed container to continue
