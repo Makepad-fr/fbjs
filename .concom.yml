@@ -1,0 +1,40 @@
+path: /Users/kaanyagci/Documents/makepad/fbjs
+version: 0.0.1
+scopes:
+    - name: funding
+      description: All changes related to funding
+    - name: browser
+      description: All changes related to the browser configuration
+    - name: scraper
+      description: All changes related to the scraper code
+    - name: readme
+      description: All changes related to the README
+    - name: package
+      description: All changes related to the package configuration file
+    - name: version
+      description: All changes related to the package version
+    - name: selectors
+      description: All changes related to the selectors
+    - name: fs
+      description: All changes related to the file system input & output files
+conventions:
+    - name: build
+      description: Changes that affect the build system or external dependencies
+    - name: ci
+      description: Changes to our CI configuration files and scripts
+    - name: docs
+      description: Documentation only changes
+    - name: feat
+      description: A new feature
+    - name: revert
+      description: 'If the commit reverts a previous commit, it should begin with revert: , followed by the header of the reverted commit. In the body it should say: This reverts commit <hash>., where the hash is the SHA of the commit being reverted.'
+    - name: fix
+      description: A bug fix
+    - name: perf
+      description: A code change that improves performance
+    - name: refactor
+      description: A code change that neither fixes a bug nor adds a feature
+    - name: style
+      description: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+    - name: test
+      description: Adding missing tests or correcting existing tests

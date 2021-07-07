@@ -8,7 +8,7 @@ Implemented in TypeScript using Puppeteer.
 <a href="https://gitmoji.dev">
   <img src="https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg?style=flat-square" alt="Gitmoji">
 </a><!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
 [![Version](https://img.shields.io/npm/v/@makepad/fbjs.svg)](https://npmjs.org/package/@makepad/fbjs)
 [![Downloads/week](https://img.shields.io/npm/dw/@makepad/fbjs.svg)](https://npmjs.org/package/@makepad/fbjs)
 [![License](https://img.shields.io/npm/l/@makepad/fbjs.svg)](https://github.com/Makepad-fr/fbjs/blob/master/package.json)
@@ -36,6 +36,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/idilsaglam"><img src="https://avatars.githubusercontent.com/u/39597780?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Idil Saglam</b></sub></a><br /><a href="https://github.com/Makepad-fr/fbjs/commits?author=idilsaglam" title="Code">💻</a></td>
     <td align="center"><a href="https://grzegorzkowalski.pl/"><img src="https://avatars.githubusercontent.com/u/1021798?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Grzegorz Adam Kowalski</b></sub></a><br /><a href="https://github.com/Makepad-fr/fbjs/commits?author=gakowalski" title="Code">💻</a> <a href="https://github.com/Makepad-fr/fbjs/issues?q=author%3Agakowalski" title="Bug reports">🐛</a> <a href="https://github.com/Makepad-fr/fbjs/commits?author=gakowalski" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/ameierchen"><img src="https://avatars.githubusercontent.com/u/78607149?v=4?s=100" width="100px;" alt=""/><br /><sub><b>ameierchen</b></sub></a><br /><a href="https://github.com/Makepad-fr/fbjs/commits?author=ameierchen" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/iMrDJAi"><img src="https://avatars.githubusercontent.com/u/42304709?v=4?s=100" width="100px;" alt=""/><br /><sub><b>${Mr.DJA}</b></sub></a><br /><a href="https://github.com/Makepad-fr/fbjs/commits?author=iMrDJAi" title="Code">💻</a></td>
   </tr>
 </table>
 

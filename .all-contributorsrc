@@ -50,7 +50,17 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "iMrDJAi",
+      "name": "${Mr.DJA}",
+      "avatar_url": "https://avatars.githubusercontent.com/u/42304709?v=4",
+      "profile": "https://github.com/iMrDJAi",
+      "contributions": [
+        "code"
+      ]
     }
   ],
-  "contributorsPerLine": 7
+  "contributorsPerLine": 7,
+  "skipCi": true
 }

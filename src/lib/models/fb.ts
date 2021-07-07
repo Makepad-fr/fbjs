@@ -82,6 +82,8 @@ export default class Facebook {
     const incognitoContext = await browser.createIncognitoBrowserContext();
     // Creates a new borwser tab
     const page = await incognitoContext.newPage();
+    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3419.0 Safari/537.36');
+
     if (options.useCookies && fs.existsSync(cookiesFilePath)) {
       const cookiesString = fs.readFileSync(cookiesFilePath);
       const cookies = JSON.parse(cookiesString.toString());
