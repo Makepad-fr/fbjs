@@ -45,8 +45,12 @@
     "lint": "node_modules/.bin/eslint . --ext .ts,.tsx --fix",
     "all-contributors": "node_modules/.bin/all-contributors"
   },
+  "funding": {
+    "type": "github-sponsors",
+    "url": "https://github.com/sponsors/Makepad-fr"
+  },
   "types": "dist/index.d.ts",
-  "version": "4.0.2",
+  "version": "4.1.0",
   "devDependencies": {
     "@types/puppeteer": "^5.4.3",
     "@typescript-eslint/eslint-plugin": "^4.15.0",
