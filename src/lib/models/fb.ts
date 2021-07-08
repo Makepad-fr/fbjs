@@ -5,9 +5,10 @@ import selectors from '../utils/selectors';
 import Options from './options';
 import InitialisationError from '../errors/initialisationError';
 import {
-  // autoScroll,
+  autoScroll,
   generateFacebookGroupURLById,
   getOldPublications,
+  promiseTimeout,
 } from '../utils/fbHelpers';
 import GroupPost from './groupPost';
 import TwoFARequiredError from '../errors/twoFARequiredError';
@@ -244,6 +245,8 @@ export default class Facebook {
     if (this.page === undefined || this.config === undefined) {
       throw new InitialisationError();
     }
+
+    // Go to the group page
     const groupUrl = generateFacebookGroupURLById(groupId);
     await this.page.goto(
       groupUrl,
@@ -252,8 +255,13 @@ export default class Facebook {
       },
     );
 
+    /**
+     * Waiting for the `group_name` selector to continue
+     * and to avoid the selector not found error.
+     * */
     await this.page.waitForSelector(selectors.facebook_group.group_name);
 
+    // Extract the group name
     const groupNameElm = await this.page.$(selectors.facebook_group.group_name);
     let groupName = await this.page.evaluate(
       (el: { textContent: any }) => el.textContent,
@@ -282,9 +290,14 @@ export default class Facebook {
       );
     };
 
-    // Start Scrolling!
-    // this.page.evaluate(autoScroll);
-    this.page.evaluate(() => window.scrollBy(0, document.body.scrollHeight));
+    /**
+     * Scroll down a little bit to load posts.
+     * The `hover()` method located in `parsePost()` will continue scrolling
+     * automatically over posts all the way down, so we only need to execute this once.
+     * To ensure that it will work we need a small delay after the page finishes loading,
+     * waiting for the "group_name" selector will provide us that delay.
+     * */
+    this.page.evaluate(autoScroll);
 
     /**
      * Waiting for the group feed container to continue
@@ -297,10 +310,15 @@ export default class Facebook {
       selectors.facebook_group.group_feed_container,
     );
 
+    /**
+     * This will ensure that it won't run the function
+     * `handlePosts` more than once in the same time.
+     * */
     let busy = false;
 
     /**
      * Handle new added posts
+     * @param force
      */
     const handlePosts = async (force: boolean): Promise<void> => {
       if (busy && !force) return;
@@ -308,7 +326,6 @@ export default class Facebook {
       const postHnd = await this.page?.evaluateHandle(
         () => window.posts.shift(),
       );
-      console.log(postHnd?.toString());
       if (postHnd?.toString() !== 'JSHandle:undefined') {
         try {
           const postData = await this.parsePost(<ElementHandle>postHnd);
@@ -349,7 +366,7 @@ export default class Facebook {
   }
 
   /**
-   * Extract data from a group post
+   * Extract data from a post
    * @param post
    */
   public async parsePost(postHnd: ElementHandle) {
@@ -357,50 +374,88 @@ export default class Facebook {
       throw new InitialisationError();
     }
 
-    const submissionLink = await (async () => {
+    /**
+     * Get post metadata
+     * @returns date, permalink, id
+     */
+    const getPostMetadata = async (): Promise<any> => {
+      /**
+       * We need to hover over that element to load the post
+       * permalink and to grab the post date (annoying stuff).
+       * Moving the mouse or scrolling will prevent the script from
+       * hovering and this will cause errors, because of that we should
+       * recommend users to run the scraper under the headless mode.
+       * */
       const postLinkHnd = await postHnd.$(
         selectors.facebook_post.post_link,
       );
-      await postLinkHnd!.hover();
-      return this.page?.evaluate(
-        async (postLinkElm: HTMLElement) => {
-          const span = postLinkElm.parentElement!;
-          let date;
-          let permalink;
-          let id;
-          await new Promise<void>((res) => {
-            const observer = new MutationObserver(
-              () => {
-                observer.disconnect();
-                const tooltipID = span.getAttribute('aria-describedby')!;
-                const tooltip = document.getElementById(tooltipID)!;
-                date = tooltip.innerText;
-                permalink = postLinkElm.getAttribute('href')!.replace(/(\/\?.+)$/, '');
-                id = permalink.replace(/^.+\//, '');
-                res();
-              },
-            );
-            observer.observe(span, { attributes: true, attributeFilter: ['aria-describedby'] });
-          });
-          return {
-            date,
-            permalink,
-            id,
-          };
-        },
-        postLinkHnd,
-      );
-    })();
 
-    const submissionData = await this.page.evaluate(
+      // Hover
+      try {
+        await promiseTimeout(postLinkHnd!.hover(), 200);
+      } catch (err) {
+        console.error('Hover: ', err.message);
+        if (err.message === 'Node is either not visible or not an HTMLElement') {
+          await new Promise((res) => setTimeout(res, 1000));
+        }
+        return await getPostMetadata();
+      }
+
+      // Grab the metadata
+      let data;
+      try {
+        data = await promiseTimeout(
+          this.page?.evaluate(
+            async (postLinkElm: HTMLElement) => {
+              const span = postLinkElm.parentElement!;
+              let date;
+              let permalink;
+              let id;
+              await new Promise<void>((res, rej) => {
+                const observer = new MutationObserver(
+                  () => {
+                    observer.disconnect();
+                    const tooltipID = span.getAttribute('aria-describedby')!;
+                    const tooltip = document.getElementById(tooltipID);
+                    if (!tooltip) return rej(new Error('Tooltip not found!'));
+                    date = tooltip.innerText;
+                    permalink = postLinkElm.getAttribute('href')!.replace(/(\/\?.+)$/, '');
+                    id = permalink.replace(/^.+\//, '');
+                    return res();
+                  },
+                );
+                observer.observe(span, { attributes: true, attributeFilter: ['aria-describedby'] });
+                setTimeout(() => observer.disconnect(), 1000);
+              });
+              return {
+                date,
+                permalink,
+                id,
+              };
+            },
+            postLinkHnd,
+          )!,
+          1000,
+        );
+      } catch (err) {
+        console.error('data: ', err.message);
+        return await getPostMetadata();
+      }
+      return data;
+    };
+
+    const postMetadata = await getPostMetadata();
+
+    // Grab other data
+    const postData = await this.page.evaluate(
       async (postElm: HTMLElement, cssSelectors: typeof selectors) => {
+        // Not all posts provide the author profile url
         let authorElm;
         authorElm = <HTMLElement>postElm.querySelector(
           cssSelectors.facebook_post.post_author,
         );
         let authorName;
         let authorUrl;
-        // Not all posts provide author profile url
         if (authorElm) {
           authorName = authorElm.innerText;
           authorUrl = authorElm.getAttribute('href')!.replace(/(\/?\?.+)$/, '');
@@ -412,6 +467,10 @@ export default class Facebook {
           authorUrl = null;
         }
 
+        /**
+         * Also, not all posts provide the author avatar.
+         * You should authenticate to get rid of these limitations.
+         * */
         const authorAvatarElm = <HTMLElement>postElm.querySelector(
           cssSelectors.facebook_post.post_author_avatar,
         );
@@ -422,12 +481,12 @@ export default class Facebook {
           authorAvatar = null;
         }
 
+        // Some posts don't have text, so they won't have contentElm
         const contentElm = <HTMLElement>postElm.querySelector(
           cssSelectors.facebook_post.post_content,
         );
         let contentText;
         let contentHtml;
-        // Some posts don't have text, so they won't have postContentElm
         if (contentElm) {
           // We should click the "See More..." button before extracting the post content
           const expandButton = <HTMLElement>contentElm.querySelector(
@@ -466,16 +525,16 @@ export default class Facebook {
       postHnd, selectors,
     );
 
-    // crates a submission object which contains our submission
+    // crates a post object which contains our post
     const groupPost: GroupPost = {
-      authorName: <string>submissionData.authorName,
-      authorUrl: <string | null>submissionData.authorUrl,
-      authorAvatar: <string | null>submissionData.authorAvatar,
-      date: <string>submissionLink!.date!,
-      permalink: <string>submissionLink!.permalink!,
-      id: <string>submissionLink!.id!,
-      contentText: <string | null>submissionData.contentText,
-      contentHtml: <string | null>submissionData.contentHtml,
+      authorName: <string>postData.authorName,
+      authorUrl: <string | null>postData.authorUrl,
+      authorAvatar: <string | null>postData.authorAvatar,
+      date: <string>postMetadata.date,
+      permalink: <string>postMetadata.permalink,
+      id: <string>postMetadata.id,
+      contentText: <string | null>postData.contentText,
+      contentHtml: <string | null>postData.contentHtml,
     };
 
     return groupPost;

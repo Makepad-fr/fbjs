@@ -35,21 +35,23 @@ export async function sleep(duration: number): Promise<void> {
 }
 
 /**
- * Function automatically infinite scrolls
+ * Function automatically scrolls
  */
 export function autoScroll(): void {
-  const internalSleep = async (duration: number): Promise<void> => new Promise(((resolve) => {
-    setTimeout(resolve, duration);
-  }));
-  const scroll = async () => {
-    window.scrollBy(0, document.body.scrollHeight);
-    // eslint-disable-next-line no-await-in-loop
-    await internalSleep(
-      Math.round(
-        (Math.random() * 4000) + 1000,
-      ),
-    );
-    scroll();
-  };
-  scroll();
+  return window.scrollBy(0, document.body.scrollHeight);
+}
+
+/**
+ * Function to add timeout to a promise
+ * @param promise
+ * @param time in ms
+ */
+export function promiseTimeout(promise: Promise<any>, time: number): Promise<any> {
+  let timer: NodeJS.Timeout;
+  return Promise.race([
+    promise,
+    new Promise((_res, rej) => {
+      timer = setTimeout(() => rej(new Error('Timeout error!')), time);
+    }),
+  ]).finally(() => clearTimeout(timer));
 }
