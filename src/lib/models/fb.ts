@@ -246,6 +246,7 @@ export default class Facebook {
     groupId: number,
     outputFileName: string | undefined,
     callback?: (arg0: GroupPost) => void,
+    save: boolean = true,
   ) {
     if (this.page === undefined || this.config === undefined) {
       throw new InitialisationError();
@@ -279,11 +280,13 @@ export default class Facebook {
     const savePost = (postData: GroupPost): void => {
       const allPublicationsList = getOldPublications(outputFileName!);
       allPublicationsList.push(postData);
-      fs.writeFileSync(
-        outputFileName!,
-        JSON.stringify(allPublicationsList, undefined, 4),
-        { encoding: 'utf8' },
-      );
+      if (save) {
+        fs.writeFileSync(
+          outputFileName!,
+          JSON.stringify(allPublicationsList, undefined, 4),
+          { encoding: 'utf8' },
+        );
+      }
     };
 
     // Start Scrolling!
