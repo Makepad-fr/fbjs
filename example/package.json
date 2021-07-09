@@ -1,0 +1,19 @@
+{
+  "name": "fbjs-example",
+  "version": "1.0.0",
+  "description": "Examples for FBJS",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prestart": "./node_modules/.bin/tsc",
+    "start": "node dist/index.js"
+  },
+  "author": "Makepad Developers <dev@makepad.fr>",
+  "license": "GPL-3.0-or-later",
+  "devDependencies": {
+    "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "@makepad/fbjs": "file:.."
+  }
+}
