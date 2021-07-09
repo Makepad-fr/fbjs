@@ -260,12 +260,6 @@ export default class Facebook {
       },
     );
 
-    const groupNameElm = await this.page.$(selectors.facebook_group.group_name);
-    let groupName = await this.page.evaluate(
-      (el: { textContent: any }) => el.textContent,
-      groupNameElm,
-    );
-
     if (outputFileName === undefined) {
       // eslint-disable-next-line no-param-reassign
       outputFileName = `${this.config.output + groupId}.json`;
