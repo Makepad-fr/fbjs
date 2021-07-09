@@ -19,6 +19,10 @@ Implemented in TypeScript using Puppeteer.
 
 ## Find the full documentation on [fbjs.dev](https://fbjs.dev)
 
+## Usage
+
+You can find usage examples in [example](./example) folder.
+
 ## Showcase
 
 - A TypeScript CLI available at [Github fbjs-cli repo](https://github.com/Makepad-fr/fbjs-cli)
