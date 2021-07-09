@@ -159,7 +159,7 @@ export default class Facebook {
       if (this.cookiesFilePath === undefined) {
         this.cookiesFilePath = 'fbjs_cookies';
       }
-      fs.writeFileSync(`./${this.cookiesFilePath.replace(/\.json$/g,'')}.json`, JSON.stringify(cookies, null, 2));
+      fs.writeFileSync(`./${this.cookiesFilePath.replace(/\.json$/g, '')}.json`, JSON.stringify(cookies, null, 2));
     }
   }
 
@@ -242,7 +242,11 @@ export default class Facebook {
    * @param groupId
    * @param outputFileName
    */
-  public async getGroupPosts(groupId: number, outputFileName: string | undefined, callback?: (arg0: GroupPost) => void) {
+  public async getGroupPosts(
+    groupId: number,
+    outputFileName: string | undefined,
+    callback?: (arg0: GroupPost) => void,
+  ) {
     if (this.page === undefined || this.config === undefined) {
       throw new InitialisationError();
     }
