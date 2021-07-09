@@ -260,7 +260,6 @@ export default class Facebook {
       (el: { textContent: any }) => el.textContent,
       groupNameElm,
     );
-    console.log(groupName);
 
     // The validation here is much complicated than just replacing a slash with an underscore
     groupName = groupName.replace(/\//g, '_');
