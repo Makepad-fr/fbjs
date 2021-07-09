@@ -242,7 +242,7 @@ export default class Facebook {
    * @param groupId
    * @param outputFileName
    */
-  public async getGroupPosts(groupId: number, outputFileName: string | undefined) {
+  public async getGroupPosts(groupId: number, outputFileName: string | undefined, callback?: (arg0: GroupPost) => void) {
     if (this.page === undefined || this.config === undefined) {
       throw new InitialisationError();
     }
@@ -304,7 +304,9 @@ export default class Facebook {
         () => window.posts.shift(),
       );
       const postData = await this.parsePost(<ElementHandle>post);
-      console.log(postData);
+      if (callback !== undefined && callback !== null) {
+        callback(postData);
+      }
       savePost(postData);
     };
     this.page.exposeFunction('handlePosts', handlePosts);
