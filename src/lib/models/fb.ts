@@ -266,11 +266,9 @@ export default class Facebook {
       groupNameElm,
     );
 
-    // The validation here is much complicated than just replacing a slash with an underscore
-    groupName = groupName.replace(/\//g, '_');
     if (outputFileName === undefined) {
       // eslint-disable-next-line no-param-reassign
-      outputFileName = `${this.config.output + groupName}.json`;
+      outputFileName = `${this.config.output + groupId}.json`;
     }
 
     /**
