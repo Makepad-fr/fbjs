@@ -159,7 +159,7 @@ export default class Facebook {
       if (this.cookiesFilePath === undefined) {
         this.cookiesFilePath = 'fbjs_cookies';
       }
-      fs.writeFileSync(`./${this.cookiesFilePath}.json`, JSON.stringify(cookies, null, 2));
+      fs.writeFileSync(`./${this.cookiesFilePath.replace(/\.json$/g,'')}.json`, JSON.stringify(cookies, null, 2));
     }
   }
 
@@ -230,7 +230,7 @@ export default class Facebook {
         if (this.cookiesFilePath === undefined) {
           this.cookiesFilePath = 'fbjs_cookies';
         }
-        fs.writeFileSync(`./${this.cookiesFilePath}.json`, JSON.stringify(cookies, null, 2));
+        fs.writeFileSync(`./${this.cookiesFilePath.replace(/\.json$/g, '')}.json`, JSON.stringify(cookies, null, 2));
       }
       return;
     }
