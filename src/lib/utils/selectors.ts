@@ -6,14 +6,14 @@ export default {
     parent: 'form',
   },
   facebook_group: {
-    group_name: 'title',
+    group_name: 'h1[dir=auto] span[dir=auto]',
     group_feed_container: 'div[role=feed]',
   },
   facebook_post: {
     post_element: 'div[role=article][aria-labelledby]',
     post_author: 'h2 span a',
     post_author2: 'h2 strong span',
-    post_author_avatar: 'object image',
+    post_author_avatar: 'svg image',
     post_link: 'span[dir=auto] > span a',
     post_content: 'div[dir=auto][class]',
     post_content_expand_button: 'div[role=button]',
