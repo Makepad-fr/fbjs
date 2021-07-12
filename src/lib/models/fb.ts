@@ -288,11 +288,13 @@ export default class Facebook {
     const savePost = (postData: Post): void => {
       const allPublicationsList = getOldPublications(outputFileName!);
       allPublicationsList.push(postData);
-      fs.writeFileSync(
-        outputFileName!,
-        JSON.stringify(allPublicationsList, undefined, 4),
-        { encoding: 'utf8' },
-      );
+      if (save) {
+        fs.writeFileSync(
+          outputFileName!,
+          JSON.stringify(allPublicationsList, undefined, 4),
+          { encoding: 'utf8' },
+        );
+      }
     };
 
     /**
