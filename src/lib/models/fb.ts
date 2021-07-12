@@ -245,7 +245,7 @@ export default class Facebook {
    */
   public async getGroupPosts(
     groupId: number,
-    outputFileName: string | undefined,
+    outputFileName?: string,
     callback?: (arg0: Post) => void,
     save: boolean = true,
   ) {
@@ -270,13 +270,13 @@ export default class Facebook {
 
     // Extract the group name
     const groupNameElm = await this.page.$(selectors.facebook_group.group_name);
-    let groupName = await this.page.evaluate(
+    const groupName = await this.page.evaluate(
       (el: { textContent: any }) => el.textContent,
       groupNameElm,
     );
     console.log(groupName);
 
-    if (outputFileName === undefined) {
+    if (!outputFileName) {
       // eslint-disable-next-line no-param-reassign
       outputFileName = `${this.config.output + groupId}.json`;
     }
@@ -288,13 +288,11 @@ export default class Facebook {
     const savePost = (postData: Post): void => {
       const allPublicationsList = getOldPublications(outputFileName!);
       allPublicationsList.push(postData);
-      if (save) {
-        fs.writeFileSync(
-          outputFileName!,
-          JSON.stringify(allPublicationsList, undefined, 4),
-          { encoding: 'utf8' },
-        );
-      }
+      fs.writeFileSync(
+        outputFileName!,
+        JSON.stringify(allPublicationsList, undefined, 4),
+        { encoding: 'utf8' },
+      );
     };
 
     /**
@@ -335,10 +333,8 @@ export default class Facebook {
       );
       if (postHnd?.toString() !== 'JSHandle:undefined') {
         const postData = await this.parsePost(<ElementHandle>postHnd);
-        if (callback !== undefined && callback !== null) {
-          callback(postData);
-        }
-        savePost(postData);
+        if (callback) callback(postData);
+        if (save) savePost(postData);
         handlePosts(true);
       } else {
         busy = false;
