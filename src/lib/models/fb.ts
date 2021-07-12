@@ -159,7 +159,7 @@ export default class Facebook {
       if (this.cookiesFilePath === undefined) {
         this.cookiesFilePath = 'fbjs_cookies';
       }
-      fs.writeFileSync(`./${this.cookiesFilePath}.json`, JSON.stringify(cookies, null, 2));
+      fs.writeFileSync(`./${this.cookiesFilePath.replace(/\.json$/g, '')}.json`, JSON.stringify(cookies, null, 2));
     }
   }
 
@@ -230,7 +230,7 @@ export default class Facebook {
         if (this.cookiesFilePath === undefined) {
           this.cookiesFilePath = 'fbjs_cookies';
         }
-        fs.writeFileSync(`./${this.cookiesFilePath}.json`, JSON.stringify(cookies, null, 2));
+        fs.writeFileSync(`./${this.cookiesFilePath.replace(/\.json$/g, '')}.json`, JSON.stringify(cookies, null, 2));
       }
       return;
     }
@@ -242,7 +242,12 @@ export default class Facebook {
    * @param groupId
    * @param outputFileName
    */
-  public async getGroupPosts(groupId: number, outputFileName: string | undefined) {
+  public async getGroupPosts(
+    groupId: number,
+    outputFileName: string | undefined,
+    callback?: (arg0: GroupPost) => void,
+    save: boolean = true,
+  ) {
     if (this.page === undefined || this.config === undefined) {
       throw new InitialisationError();
     }
@@ -255,18 +260,9 @@ export default class Facebook {
       },
     );
 
-    const groupNameElm = await this.page.$(selectors.facebook_group.group_name);
-    let groupName = await this.page.evaluate(
-      (el: { textContent: any }) => el.textContent,
-      groupNameElm,
-    );
-    console.log(groupName);
-
-    // The validation here is much complicated than just replacing a slash with an underscore
-    groupName = groupName.replace(/\//g, '_');
     if (outputFileName === undefined) {
       // eslint-disable-next-line no-param-reassign
-      outputFileName = `${this.config.output + groupName}.json`;
+      outputFileName = `${this.config.output + groupId}.json`;
     }
 
     /**
@@ -276,11 +272,13 @@ export default class Facebook {
     const savePost = (postData: GroupPost): void => {
       const allPublicationsList = getOldPublications(outputFileName!);
       allPublicationsList.push(postData);
-      fs.writeFileSync(
-        outputFileName!,
-        JSON.stringify(allPublicationsList, undefined, 4),
-        { encoding: 'utf8' },
-      );
+      if (save) {
+        fs.writeFileSync(
+          outputFileName!,
+          JSON.stringify(allPublicationsList, undefined, 4),
+          { encoding: 'utf8' },
+        );
+      }
     };
 
     // Start Scrolling!
@@ -305,7 +303,9 @@ export default class Facebook {
         () => window.posts.shift(),
       );
       const postData = await this.parsePost(<ElementHandle>post);
-      console.log(postData);
+      if (callback !== undefined && callback !== null) {
+        callback(postData);
+      }
       savePost(postData);
     };
     this.page.exposeFunction('handlePosts', handlePosts);
