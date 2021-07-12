@@ -10,7 +10,7 @@ import {
   getOldPublications,
   promiseTimeout,
 } from '../utils/fbHelpers';
-import GroupPost from './groupPost';
+import Post from './Post';
 import TwoFARequiredError from '../errors/twoFARequiredError';
 
 declare global {
@@ -280,7 +280,7 @@ export default class Facebook {
      * Save post to the database
      * @param postData
      */
-    const savePost = (postData: GroupPost): void => {
+    const savePost = (postData: Post): void => {
       const allPublicationsList = getOldPublications(outputFileName!);
       allPublicationsList.push(postData);
       fs.writeFileSync(
@@ -380,15 +380,23 @@ export default class Facebook {
      */
     const getPostMetadata = async (): Promise<any> => {
       /**
-       * We need to hover over that element to load the post
-       * permalink and to grab the post date (annoying stuff).
-       * Moving the mouse or scrolling will prevent the script from
-       * hovering and this will cause errors, because of that we should
-       * recommend users to run the scraper under the headless mode.
+       * We need to hover over that element to load the post permalink
+       * and to grab the post date (annoying stuff).
+       * Moving the mouse or scrolling or minimizing the window will prevent
+       * the script from hovering and this will cause errors, because of that
+       * we recommend users to run the scraper under the headless mode.
        * */
       const postLinkHnd = await postHnd.$(
         selectors.facebook_post.post_link,
       );
+
+      // Reset cursor locaion
+      try {
+        await promiseTimeout(this.page?.mouse.move(0, 0)!, 200);
+      } catch (err) {
+        console.error('Move: ', err.message);
+        return await getPostMetadata();
+      }
 
       // Hover
       try {
@@ -450,8 +458,7 @@ export default class Facebook {
     const postData = await this.page.evaluate(
       async (postElm: HTMLElement, cssSelectors: typeof selectors) => {
         // Not all posts provide the author profile url
-        let authorElm;
-        authorElm = <HTMLElement>postElm.querySelector(
+        let authorElm = <HTMLElement>postElm.querySelector(
           cssSelectors.facebook_post.post_author,
         );
         let authorName;
@@ -514,19 +521,38 @@ export default class Facebook {
           contentHtml = null;
         }
 
+        // Some posts don't have attachments, so they won't have attachmentElm
+        const attachmentElm = <HTMLElement>postElm.querySelector(
+          contentElm
+            ? cssSelectors.facebook_post.post_attachment
+            : cssSelectors.facebook_post.post_attachment2,
+        );
+
+        const images: any[] = [];
+        if (attachmentElm) {
+          const imgElms = Array.from(
+            attachmentElm.querySelectorAll(cssSelectors.facebook_post.post_img),
+          );
+          imgElms.forEach((imgElm) => {
+            const src = imgElm.getAttribute('src');
+            images.push(src);
+          });
+        }
+
         return {
           authorName,
           authorUrl,
           authorAvatar,
           contentText,
           contentHtml,
+          images,
         };
       },
       postHnd, selectors,
     );
 
     // crates a post object which contains our post
-    const groupPost: GroupPost = {
+    const groupPost: Post = {
       authorName: <string>postData.authorName,
       authorUrl: <string | null>postData.authorUrl,
       authorAvatar: <string | null>postData.authorAvatar,
@@ -535,6 +561,7 @@ export default class Facebook {
       id: <string>postMetadata.id,
       contentText: <string | null>postData.contentText,
       contentHtml: <string | null>postData.contentHtml,
+      images: <any[]>postData.images,
     };
 
     return groupPost;

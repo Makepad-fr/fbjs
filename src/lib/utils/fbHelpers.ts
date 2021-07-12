@@ -1,5 +1,5 @@
 import fs from 'fs';
-import GroupPost from '../models/groupPost';
+import Post from '../models/Post';
 
 export function generateFacebookGroupURLById(id: number): string {
   return `https://www.facebook.com/groups/${id}/`;
@@ -10,7 +10,7 @@ export function generateFacebookGroupURLById(id: number): string {
  * @param {type} fileName name of the file
  * @return {Object[]} returns the list of all publications.
  * */
-export function getOldPublications(fileName: string): GroupPost[] {
+export function getOldPublications(fileName: string): Post[] {
   let allPublicationsList;
   if (fs.existsSync(fileName)) {
     // If file exists
