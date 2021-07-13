@@ -1,9 +1,14 @@
 ## FBJS Example
 
-### Prerequisites
+## Prerequisites
 
-You need to have NodeJS and npm installed on your local machine. Library is written on NodeJS `v16.2.0` and npm `v7.13.0`. 
-We recommend to use these versions or a greater one.
+### For development
+
+To install dev dependencies we recommend to have NodeJS version `v14.x.x` or higher. 
+
+### In production
+
+To use the module in production, you need to have NodeJS `v8.x.x` or higher.
 
 ### Usage
 

@@ -16,6 +16,16 @@ Implemented in TypeScript using Puppeteer.
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ​​
+## Prerequisites
+
+### For development
+
+To install dev dependencies we recommend to have NodeJS version `v14.x.x` or higher. 
+
+### In production
+
+To use the module in production, you need to have NodeJS `v8.x.x` or higher.
+
 
 ## Find the full documentation on [fbjs.dev](https://fbjs.dev)
 
