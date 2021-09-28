@@ -1,12 +1,12 @@
 import { ElementHandle, Page } from 'puppeteer';
 import fs from 'fs';
-import InitialisationError from '../errors/initialisationError';
+import Initialisation_error from '../errors/initialisation_error';
 import {
   autoScroll, generateFacebookGroupURLById, getOldPublications, promiseTimeout,
-} from '../utils/fbHelpers';
+} from '../utils/fb_helpers';
 import selectors from '../utils/selectors';
-import Options from './options';
-import Post from './Post';
+import Options from '../models/options';
+import Post from '../models/post';
 
 export default class Group {
   private page: Page;
@@ -152,7 +152,7 @@ export default class Group {
    */
   private async parsePost(postHnd: ElementHandle) {
     if (this.page === undefined || this.config === undefined) {
-      throw new InitialisationError();
+      throw new Initialisation_error();
     }
 
     /**

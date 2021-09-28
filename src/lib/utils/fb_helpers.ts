@@ -1,5 +1,5 @@
 import fs from 'fs';
-import Post from '../models/Post';
+import Post from '../models/post';
 
 export function generateFacebookGroupURLById(id: number): string {
   return `https://www.facebook.com/groups/${id}/`;

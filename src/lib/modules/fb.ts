@@ -2,10 +2,10 @@
 import fs from 'fs';
 import puppeteer, { Browser, Page } from 'puppeteer';
 import selectors from '../utils/selectors';
-import Options from './options';
-import InitialisationError from '../errors/initialisationError';
+import Options from '../models/options';
+import Initialisation_error from '../errors/initialisation_error';
 
-import TwoFARequiredError from '../errors/twoFARequiredError';
+import Two_fa_required_error from '../errors/two_fa_required_error';
 import Group from './group';
 
 declare global {
@@ -96,7 +96,7 @@ export default class Facebook {
    */
   private async disableAssets() {
     if (this.page === undefined) {
-      throw new InitialisationError();
+      throw new Initialisation_error();
     }
     await this.page.setRequestInterception(true);
     const blockResources = [
@@ -127,7 +127,7 @@ export default class Facebook {
     const authCodeInputSelector = '//input[contains(concat(" ", normalize-space(@name), " "), " approvals_code")]';
     const authCodeContinueButtonSelector = '//button[contains(concat(" ", normalize-space(@id), " "), " checkpointSubmitButton")]';
     if (this.page === undefined || this.config === undefined) {
-      throw new InitialisationError();
+      throw new Initialisation_error();
     }
     await this.page.waitForXPath(authCodeInputSelector);
     await (await this.page.$x(authCodeInputSelector))[0].focus();
@@ -179,7 +179,7 @@ export default class Facebook {
     password: string,
   ) {
     if (this.page === undefined || this.config === undefined) {
-      throw new InitialisationError();
+      throw new Initialisation_error();
     }
     // Goes to base facebook url
     await this.page.goto(this.url);
@@ -232,7 +232,7 @@ export default class Facebook {
       }
       return;
     }
-    throw new TwoFARequiredError();
+    throw new Two_fa_required_error();
   }
 
   public set group(id: number) {
