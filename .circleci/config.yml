@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  node: circleci/node@1.1.6
+  node: circleci/node:latest
 commands:
   install-dependencies:
     description: "Install dependencies"
@@ -50,7 +50,7 @@ workflows:
       - build-lint-and-test
       - build-and-publish:
           requires:
-            - build-lint-and-test 
+            - build-lint-and-test
           filters:
             branches:
               ignore: /.*/
