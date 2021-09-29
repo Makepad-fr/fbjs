@@ -3,10 +3,11 @@ import fs from 'fs';
 import puppeteer, { Browser, Page } from 'puppeteer';
 import selectors from '../utils/selectors';
 import Options from '../models/options';
-import Initialisation_error from '../errors/initialisation_error';
+import InitialisationError from '../errors/initialisation_error';
 
-import Two_fa_required_error from '../errors/two_fa_required_error';
+import TwoFARequiredError from '../errors/two_fa_required_error';
 import Group from './group';
+import { acceptCookies } from '../utils/fb_helpers';
 
 declare global {
   interface Window {
@@ -23,7 +24,7 @@ export default class Facebook {
 
   private browser: Browser;
 
-  private page: Page;
+  private readonly page: Page;
 
   private cookiesFilePath: string;
 
@@ -96,7 +97,7 @@ export default class Facebook {
    */
   private async disableAssets() {
     if (this.page === undefined) {
-      throw new Initialisation_error();
+      throw new InitialisationError();
     }
     await this.page.setRequestInterception(true);
     const blockResources = [
@@ -127,7 +128,7 @@ export default class Facebook {
     const authCodeInputSelector = '//input[contains(concat(" ", normalize-space(@name), " "), " approvals_code")]';
     const authCodeContinueButtonSelector = '//button[contains(concat(" ", normalize-space(@id), " "), " checkpointSubmitButton")]';
     if (this.page === undefined || this.config === undefined) {
-      throw new Initialisation_error();
+      throw new InitialisationError();
     }
     await this.page.waitForXPath(authCodeInputSelector);
     await (await this.page.$x(authCodeInputSelector))[0].focus();
@@ -152,19 +153,13 @@ export default class Facebook {
     if (this.config.disableAssets) {
       await this.disableAssets();
     }
-    if (this.config.useCookies) {
-      const cookies = await this.page.cookies();
-      if (this.cookiesFilePath === undefined) {
-        this.cookiesFilePath = 'fbjs_cookies';
-      }
-      fs.writeFileSync(`./${this.cookiesFilePath.replace(/\.json$/g, '')}.json`, JSON.stringify(cookies, null, 2));
-    }
+    await this.saveCookies();
   }
 
   /**
    * Function closes everything
    */
-  public async close(): Promise<void> {
+  public async close() {
     this.page?.close();
     this.browser?.close();
   }
@@ -179,30 +174,58 @@ export default class Facebook {
     password: string,
   ) {
     if (this.page === undefined || this.config === undefined) {
-      throw new Initialisation_error();
+      throw new InitialisationError();
     }
     // Goes to base facebook url
     await this.page.goto(this.url);
-    try {
-      await this.page.waitForXPath('//button[@data-cookiebanner="accept_button"]');
-      const acceptCookiesButton = (await this.page.$x('//button[@data-cookiebanner="accept_button"]'))[0];
-      await this.page.evaluate((el) => {
-        el.focus();
-        el.click();
-      }, acceptCookiesButton);
-    } catch {
-      // We can not have empty blocks, so we are calling a function which do literally nothing
-      (() => {})();
-    }
 
-    /**
-     * Waiting for login form JQuery selector to avoid
-     * that forms elements to be not found
-     * */
+    // Accept cookies if needed
+    await acceptCookies(this.page);
+
+    await this.completeLoginForm(username, password);
+    if (await this.checkFor2FA()) {
+      throw new TwoFARequiredError();
+    }
+    await this.page.waitForXPath('//div[@data-pagelet="Stories"]');
+    if (this.config.disableAssets) {
+      await this.disableAssets();
+    }
+    await this.saveCookies();
+  }
+
+  /**
+   * Function sets the group id for the Bot
+   * @param id The id of the group
+   * @return Group The current group related to the scraper
+   */
+  public group(id: number): Group {
+    this.g = new Group(this.page, this.config, id);
+    return this.g;
+  }
+
+  /**
+   * Function tests if the 2FA input appeared
+   * @return true if 2FA banner is appeared, false if not
+   * @private
+   */
+  private async checkFor2FA(): Promise<boolean> {
+    try {
+      await this.page.waitForXPath('//form[contains(concat(" ", normalize-space(@class), " "), " checkpoint")]');
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /**
+   * Function completes the login form
+   * @param username The username to write in the username field
+   * @param password The password to write in the password field
+   * @private
+   */
+  private async completeLoginForm(username: string, password: string) {
     await this.page.waitForSelector(selectors.login_form.parent);
     // Focusing to the email input
-    await this.page.focus(selectors.login_form.email);
-    // Clicking on the email form input to be able to type on input
     await this.page.focus(selectors.login_form.email);
     // Typing on the email input the email address
     await this.page.keyboard.type(username);
@@ -213,33 +236,20 @@ export default class Facebook {
     // Clicking on the submit button
     await this.page.waitForXPath('//button[@data-testid="royal_login_button"]');
     const [loginButton] = await this.page.$x('//button[@data-testid="royal_login_button"]');
-    await this.page.evaluate((el) => {
-      el.click();
-    }, loginButton);
-    try {
-      await this.page.waitForXPath('//form[contains(concat(" ", normalize-space(@class), " "), " checkpoint")]');
-    } catch (e) {
-      await this.page.waitForXPath('//div[@data-pagelet="Stories"]');
-      if (this.config.disableAssets) {
-        await this.disableAssets();
+    await loginButton.click();
+  }
+
+  /**
+   * Function saves cookies if configuration enables the usage of cookies.
+   * @private
+   */
+  private async saveCookies() {
+    if (this.config.useCookies) {
+      const cookies = await this.page.cookies();
+      if (this.cookiesFilePath === undefined) {
+        this.cookiesFilePath = 'fbjs_cookies';
       }
-      if (this.config.useCookies) {
-        const cookies = await this.page.cookies();
-        if (this.cookiesFilePath === undefined) {
-          this.cookiesFilePath = 'fbjs_cookies';
-        }
-        fs.writeFileSync(`./${this.cookiesFilePath.replace(/\.json$/g, '')}.json`, JSON.stringify(cookies, null, 2));
-      }
-      return;
+      fs.writeFileSync(`./${this.cookiesFilePath.replace(/\.json$/g, '')}.json`, JSON.stringify(cookies, null, 2));
     }
-    throw new Two_fa_required_error();
-  }
-
-  public set group(id: number) {
-    this.g = new Group(this.page, this.config, id);
-  }
-
-  public get currentGroup() {
-    return this.g;
   }
 }

@@ -1,3 +1,3 @@
-export default class Two_fa_required_error extends Error {
+export default class TwoFARequiredError extends Error {
 
 }

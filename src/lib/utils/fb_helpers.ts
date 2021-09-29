@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { Page } from 'puppeteer';
 import Post from '../models/post';
 
 export function generateFacebookGroupURLById(id: number): string {
@@ -54,4 +55,22 @@ export function promiseTimeout(promise: Promise<any>, time: number): Promise<any
       timer = setTimeout(() => rej(new Error('Timeout error!')), time);
     }),
   ]).finally(() => clearTimeout(timer));
+}
+
+/**
+ * Function accept cookies if the cookies pop-up appears.
+ * @param page The current page
+ */
+export async function acceptCookies(page: Page) {
+  try {
+    await page.waitForXPath('//button[@data-cookiebanner="accept_button"]');
+    const acceptCookiesButton = (await page.$x('//button[@data-cookiebanner="accept_button"]'))[0];
+    await page.evaluate((el) => {
+      el.focus();
+      el.click();
+    }, acceptCookiesButton);
+  } catch {
+    // We can not have empty blocks, so we are calling a function which do literally nothing
+    (() => {})();
+  }
 }

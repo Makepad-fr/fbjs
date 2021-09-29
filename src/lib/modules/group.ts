@@ -1,6 +1,6 @@
 import { ElementHandle, Page } from 'puppeteer';
 import fs from 'fs';
-import Initialisation_error from '../errors/initialisation_error';
+import InitialisationError from '../errors/initialisation_error';
 import {
   autoScroll, generateFacebookGroupURLById, getOldPublications, promiseTimeout,
 } from '../utils/fb_helpers';
@@ -152,7 +152,7 @@ export default class Group {
    */
   private async parsePost(postHnd: ElementHandle) {
     if (this.page === undefined || this.config === undefined) {
-      throw new Initialisation_error();
+      throw new InitialisationError();
     }
 
     /**

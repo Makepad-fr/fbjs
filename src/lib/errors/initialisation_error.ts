@@ -1,3 +1,3 @@
-export default class Initialisation_error extends Error {
+export default class InitialisationError extends Error {
 
 }
