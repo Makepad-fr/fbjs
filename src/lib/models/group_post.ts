@@ -1,4 +1,4 @@
-export default interface Post {
+export default interface GroupPost {
   authorName: string,
   authorUrl: string | null,
   authorAvatar: string | null,

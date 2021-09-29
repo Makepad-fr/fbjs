@@ -1,5 +1,6 @@
 import fs from 'fs';
-import Post from '../models/Post';
+import { Page } from 'puppeteer';
+import Group_post from '../models/group_post';
 
 export function generateFacebookGroupURLById(id: number): string {
   return `https://www.facebook.com/groups/${id}/`;
@@ -10,7 +11,7 @@ export function generateFacebookGroupURLById(id: number): string {
  * @param {type} fileName name of the file
  * @return {Object[]} returns the list of all publications.
  * */
-export function getOldPublications(fileName: string): Post[] {
+export function getOldPublications(fileName: string): Group_post[] {
   let allPublicationsList;
   if (fs.existsSync(fileName)) {
     // If file exists
@@ -54,4 +55,22 @@ export function promiseTimeout(promise: Promise<any>, time: number): Promise<any
       timer = setTimeout(() => rej(new Error('Timeout error!')), time);
     }),
   ]).finally(() => clearTimeout(timer));
+}
+
+/**
+ * Function accept cookies if the cookies pop-up appears.
+ * @param page The current page
+ */
+export async function acceptCookies(page: Page) {
+  try {
+    await page.waitForXPath('//button[@data-cookiebanner="accept_button"]');
+    const acceptCookiesButton = (await page.$x('//button[@data-cookiebanner="accept_button"]'))[0];
+    await page.evaluate((el) => {
+      el.focus();
+      el.click();
+    }, acceptCookiesButton);
+  } catch {
+    // We can not have empty blocks, so we are calling a function which do literally nothing
+    (() => {})();
+  }
 }
