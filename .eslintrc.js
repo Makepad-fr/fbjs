@@ -22,7 +22,16 @@ module.exports = {
     settings: {
         react: {
             version: "999.999.999"
-        }
+        },
+        "import/extensions": [".js", ".jsx", ".ts", ".tsx"],
+        "import/parsers": {
+            "@typescript-eslint/parser": [".ts", ".tsx"]
+        },
+        "import/resolver": {
+            node: {
+                extensions: [".js", ".jsx", ".ts", ".tsx"]
+            }
+        },
     },
     extends: [
         'airbnb-typescript',
