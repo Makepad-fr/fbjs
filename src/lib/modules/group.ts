@@ -5,8 +5,8 @@ import {
   autoScroll, generateFacebookGroupURLById, getOldPublications, promiseTimeout,
 } from '../utils/fb_helpers';
 import selectors from '../utils/selectors';
+import Group_post from '../models/group_post';
 import Options from '../models/options';
-import Post from '../models/post';
 
 export default class Group {
   private page: Page;
@@ -31,7 +31,7 @@ export default class Group {
    */
   public async getPosts(
     outputFileName?: string,
-    callback?: (arg0: Post) => void,
+    callback?: (arg0: Group_post) => void,
     save: boolean = true,
   ) {
     // Go to the group page
@@ -65,7 +65,7 @@ export default class Group {
      * Save post to the database
      * @param postData
      */
-    const savePost = (postData: Post): void => {
+    const savePost = (postData: Group_post): void => {
       const allPublicationsList = getOldPublications(outputFileName!);
       allPublicationsList.push(postData);
       fs.writeFileSync(
@@ -333,7 +333,7 @@ export default class Group {
     );
 
     // crates a post object which contains our post
-    const groupPost: Post = {
+    const groupPost: Group_post = {
       authorName: <string>postData.authorName,
       authorUrl: <string | null>postData.authorUrl,
       authorAvatar: <string | null>postData.authorAvatar,

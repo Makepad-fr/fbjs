@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { Page } from 'puppeteer';
-import Post from '../models/post';
+import Group_post from '../models/group_post';
 
 export function generateFacebookGroupURLById(id: number): string {
   return `https://www.facebook.com/groups/${id}/`;
@@ -11,7 +11,7 @@ export function generateFacebookGroupURLById(id: number): string {
  * @param {type} fileName name of the file
  * @return {Object[]} returns the list of all publications.
  * */
-export function getOldPublications(fileName: string): Post[] {
+export function getOldPublications(fileName: string): Group_post[] {
   let allPublicationsList;
   if (fs.existsSync(fileName)) {
     // If file exists
