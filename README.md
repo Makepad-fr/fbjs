@@ -1,3 +1,6 @@
+# IMPORTANT
+
+This repository is actually migrated in to [scraping.house](https://github.com/Makepad-fr/scraping.house/tree/master/modules/fb) and will continue from there. Please consider moving to the new repository.
 
 # FBJS
 
