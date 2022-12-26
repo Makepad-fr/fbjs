@@ -1,7 +1,3 @@
-# IMPORTANT
-
-This repository is actually migrated in to [scraping.house](https://github.com/Makepad-fr/scraping.house/tree/master/modules/fb) and will continue from there. Please consider moving to the new repository.
-
 # FBJS
 
 Tooling that automates your social media interactions to "farm" Likes, Comments, Group posts, and Friends on Facebook.\
